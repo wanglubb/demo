@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>API 测试工具</title>
+	<link rel="stylesheet" href="css/index.css">
+	<!-- ...existing head elements... -->
+
+	<!-- 简单侧边栏样式（内联，避免修改其它静态文件） -->
+	<style>
+		/* 基本布局 + 磨砂背景 */
+		.app-layout {
+			display: flex;
+			min-height: 100vh;
+			font-family: Arial, Helvetica, sans-serif;
+			/* 全局磨砂透明效果 */
+			background: rgba(255, 255, 255, 0.28);
+			backdrop-filter: blur(10px) saturate(120%);
+			-webkit-backdrop-filter: blur(10px) saturate(120%);
+			box-shadow: 0 8px 30px rgba(16,24,40,0.06);
+			border: 1px solid rgba(255,255,255,0.12);
+		}
+
+		/* 磨砂侧边栏 */
+		.sidebar {
+			width: 220px;
+			background: rgba(255,255,255,0.12);
+			backdrop-filter: blur(10px);
+			-webkit-backdrop-filter: blur(10px);
+			border-right: 1px solid rgba(0,0,0,0.06);
+			padding: 20px 10px;
+			box-sizing: border-box;
+			box-shadow: 0 6px 20px rgba(16,24,40,0.06);
+			transition: background 240ms ease, transform 160ms ease;
+		}
+
+		.sidebar .logo {
+			font-weight: 700;
+			padding: 8px 12px;
+			font-size: 1.05em;
+			margin-bottom: 12px;
+		}
+
+		/* 较为平滑的链接交互效果 */
+		.sidebar nav a {
+			display: block;
+			padding: 10px 14px;
+			color: #333;
+			text-decoration: none;
+			border-radius: 6px;
+			margin-bottom: 6px;
+			transition: background 180ms ease, color 180ms ease, transform 120ms ease;
+		}
+
+		.sidebar nav a.active,
+		.sidebar nav a:hover {
+			background: rgba(14,78,173,0.08);
+			color: #0b5ed7;
+		}
+
+		.sidebar nav a:active {
+			transform: translateY(1px) scale(0.998);
+		}
+
+		/* 主区域：相对定位以支持覆盖式面板动画 */
+		.main {
+			flex: 1;
+			padding: 20px;
+			box-sizing: border-box;
+			background: #fff;
+			position: relative;
+			overflow: hidden;
+		}
+
+		/* 面板采用覆盖式，切换时使用透明和平移动画 */
+		.tab-content {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			padding: 20px; /* 保持与 .main 一致的内边距 */
+			box-sizing: border-box;
+			/* 允许纵向滚动，支持移动端平滑惯性滚动 */
+			overflow-y: auto;
+			-webkit-overflow-scrolling: touch;
+			padding-bottom: 36px; /* 给底部内容和复制按钮留出空间 */
+			opacity: 0;
+			transform: translateY(8px) scale(0.998);
+			transition: opacity 260ms cubic-bezier(.2,.8,.2,1), transform 260ms cubic-bezier(.2,.8,.2,1);
+			pointer-events: none;
+		}
+
+		.tab-content.active {
+			opacity: 1;
+			transform: none;
+			pointer-events: auto;
+		}
+
+		/* 保持原有容器样式兼容 */
+		.container {
+			max-width: 1000px;
+			margin: 0 auto;
+		}
+
+		/* 响应时隐藏侧边栏 */
+		@media (max-width: 800px) {
+			.sidebar {
+				display: none;
+			}
+
+			.main {
+				padding: 12px;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<div class="app-layout">
+		<div class="sidebar">
+			<div class="logo">工具集</div>
+			<nav>
+				<a href="javascript:void(0)" class="active" data-tab="tab-api" onclick="openTab('tab-api', this)">API 测试工具</a>
+				<a href="javascript:void(0)" data-tab="tab-sample1" onclick="openTab('tab-sample1', this)">示例标签 1</a>
+				<a href="javascript:void(0)" data-tab="tab-sample2" onclick="openTab('tab-sample2', this)">示例标签 2</a>
+				<a href="javascript:void(0)" data-tab="tab-sample3" onclick="openTab('tab-sample3', this)">示例标签 3</a>
+			</nav>
+		</div>
+
+		<div class="main">
+			<!-- 原有内容放入名为 tab-api 的面板，保持内部结构与事件不变 -->
+			<div id="tab-api" class="tab-content active">
+				<div class="container">
+					<div class="header">
+						<h1>🚀 API 测试工具</h1>
+						<p>简单后端接口测试界面</p>
+						<div style="margin-top: 15px;">
+							<span id="user-info" style="font-size: 0.9em; opacity: 0.9;"></span>
+
+							<button id="logout-btn" class="btn"
+								style="margin-left: 15px; padding: 8px 20px; font-size: 14px; display: none;"
+								onclick="logout()">登出</button>
+							<span id="status-indicator" class="status-indicator">
+								<span class="status-dot"></span>
+								<span id="status-text">检测中...</span>
+							</span>
+						</div>
+					</div>
+					<div class="content">
+						<!-- 开放接口 -->
+						<div class="api-section">
+							<div class="api-title">
+								<span class="method-badge post">POST</span>
+								开放接口调用
+							</div>
+							<p style="color: #666; margin-bottom: 20px;">调用统一的开放接口，支持多种方法</p>
+
+							<div class="form-group">
+								<label for="method-select">选择方法：</label>
+								<select id="method-select" class="form-control" onchange="updateMethodParams()">
+									<!-- 动态填充：初始占位 -->
+									<option value="loading">加载中...</option>
+								</select>
+							</div>
+
+							<div class="form-group">
+								<label for="method-input">方法名称：</label>
+								<input type="text" id="method-input" class="form-control" value="createOrder"
+									placeholder="输入API方法名">
+							</div>
+
+							<div class="form-group">
+								<label for="params-input">请求参数 (JSON格式)：</label>
+								<textarea id="params-input" class="form-control" placeholder="输入JSON格式的参数">
+{
+  "method": "createOrder",
+  "params": {
+    "orderId": "ORDER_001",
+    "amount": 100.00,
+    "productName": "测试商品"
+  }
+}</textarea>
+								<div class="example-params">
+									<strong>参数说明：</strong><br>
+									• method: 必填，API方法名<br>
+									• params: 可选，具体的业务参数<br>
+									• 其他自定义参数...
+								</div>
+							</div>
+
+							<button class="btn" onclick="callOpenApi()">调用接口</button>
+							<button class="btn" onclick="clearResponse('open-response')"
+								style="background: #6c757d;">清空结果</button>
+
+							<div id="open-response" class="response-area" style="display: none;">
+								<div class="response-title">响应结果：
+									<button class="btn" style="padding: 5px 15px; font-size: 12px;"
+										onclick="copyToClipboard('open-content')">复制</button>
+								</div>
+								<div id="open-content" class="response-content"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 简单示例面板（占位，样式与主面板一致） -->
+			<div id="tab-sample1" class="tab-content">
+				<div class="container">
+					<h2>示例标签 1</h2>
+					<p>这里可以放置别的工具或说明文本，保持与主界面一致的风格。</p>
+				</div>
+			</div>
+
+			<div id="tab-sample2" class="tab-content">
+				<div class="container">
+					<h2>示例标签 2</h2>
+					<p>占位内容：例如日志查看、配置面板等。</p>
+				</div>
+			</div>
+
+			<div id="tab-sample3" class="tab-content">
+				<div class="container">
+					<h2>示例标签 3</h2>
+					<p>占位内容：自定义扩展区。</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 简单的切换逻辑，确保不影响已有全局函数 -->
+	<script>
+		function openTab(tabId, anchor) {
+			// 切换主体面板
+			document.querySelectorAll('.tab-content').forEach(function (el) {
+				el.classList.remove('active');
+			});
+			var target = document.getElementById(tabId);
+			if (target) target.classList.add('active');
+
+			// 切换侧边栏样式
+			document.querySelectorAll('.sidebar nav a').forEach(function (a) {
+				a.classList.remove('active');
+			});
+			if (anchor) anchor.classList.add('active');
+		}
+
+		// 保证在移动端或小屏下也能把主面板显示出来（当侧边栏被隐藏时）
+		window.addEventListener('resize', function () {
+			// noop for now, placeholder for未来扩展
+		});
+	</script>
+
+	<!-- 保持原有脚本引用顺序 -->
+	<script src="js/heartbeat.js"></script>
+	<script src="js/httpMethod.js"></script>
+</body>
+
+</html>
