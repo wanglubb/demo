@@ -104,7 +104,7 @@ public class UnifiedApiController {
         // 创建并返回一个包含"Version 1.0"的成功响应对象
         ApiResponse apiResponse = ApiResponse.success("Version 1.0");
         // 记录接收到API版本请求的日志信息
-        logger.info("获取心跳版本");
+        logger.debug("获取心跳版本");
         return apiResponse;
     }
 
@@ -154,7 +154,8 @@ public class UnifiedApiController {
 
     /**
      * 一键跳转到北京工商局首页
-     * @param response 
+     * 
+     * @param response
      * @throws Exception
      */
     @GetMapping("/toBJ")

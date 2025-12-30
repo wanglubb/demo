@@ -1,6 +1,5 @@
 package com.tools.demo;
 
-import java.util.Base64;
 import java.util.HashMap;
 
 import com.tools.demo.eunm.HttpEnum;
@@ -8,7 +7,6 @@ import com.tools.demo.exceptionHandlers.ApiException;
 import com.tools.demo.inter.imp.GetHomePageUrlForBJ;
 import com.tools.demo.utils.httpUtils.MyHttpClientFactory;
 import com.tools.demo.utils.httpUtils.MyHttpRequest;
-import com.tools.demo.utils.ChaoJiYing;
 import com.tools.demo.utils.httpUtils.HttpRequester;
 import com.tools.demo.utils.httpUtils.MyHttpResponse;
 import com.tools.demo.vo.ApiResponse;
@@ -19,8 +17,6 @@ import org.junit.jupiter.api.Test;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.http.Header;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 
 public class HttpUtilTest {
 

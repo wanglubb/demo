@@ -8,7 +8,7 @@ plugins {
 }
 
 group = 'com.tools'
-version = '0.0.2-SNAPSHOT'
+version = '0.0.3-SNAPSHOT'
 
 java {
 	toolchain {
@@ -52,6 +52,20 @@ dependencies {
 	implementation 'org.jsoup:jsoup:1.17.2'
 	// 为保证单元测试可直接导入 jsoup，显式添加 test 作用域依赖
 	testImplementation 'org.jsoup:jsoup:1.17.2'
+}
+
+
+// 配置打包任务
+bootJar {
+    enabled = true
+    archiveFileName = "${project.name}-${project.version}.jar"
+    // 排除一些不必要的文件
+    excludes = ["META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA"]
+}
+
+// 禁用普通的 jar 任务，避免生成不包含依赖的 jar
+jar {
+    enabled = false
 }
 
 tasks.named('test') {

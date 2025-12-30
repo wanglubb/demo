@@ -25,8 +25,8 @@ public class AuthController {
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     // 简单的用户名密码验证（实际项目中应该从数据库获取）
-    private static final String DEFAULT_USERNAME = "admin";
-    private static final String DEFAULT_PASSWORD = "123456";
+    private static final String DEFAULT_USERNAME = "demo";
+    private static final String DEFAULT_PASSWORD = "test2026";
 
     /**
      * 用户登录接口
