@@ -8,6 +8,7 @@ import com.tools.demo.vo.ApiResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tools.demo.utils.httpUtils.MyHttpRequest;
@@ -16,6 +17,7 @@ import com.tools.demo.utils.httpUtils.HttpRequester;
 import com.tools.demo.utils.httpUtils.apache.ApacheHttpRequester;
 import com.tools.demo.utils.ChaoJiYing;
 import com.tools.demo.utils.RSAEncrypt;
+import com.tools.demo.utils.RedisUtil;
 import com.tools.demo.vo.constant.BeiJingTax;
 
 import cn.hutool.core.util.StrUtil;
@@ -32,6 +34,9 @@ public class GetHomePageUrlForBJ implements ApiHandler {
 
     // 日志记录器
     private static final Logger logger = LoggerFactory.getLogger(GetHomePageUrlForBJ.class);
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Override
     public String getApiMethodName() {
@@ -71,14 +76,23 @@ public class GetHomePageUrlForBJ implements ApiHandler {
             }
 
             // Step 4: Get PUBKEY_URL
-            HashMap<String, String> pubKeyHeaders = new HashMap<>();
-            pubKeyHeaders.put("Cookie", "zhengtoon_inner_auth=" + innerAuthCookie);
-            MyHttpResponse pubKeyResponse = httpRequester
-                    .execute(new MyHttpRequest("GET", BeiJingTax.PUBKEY_URL, pubKeyHeaders, null));
-            String pubKey = JSONUtil.parseObj(pubKeyResponse.getBody()).getByPath("data.pubKey", String.class);
-            if (StrUtil.isBlank(pubKey)) {
-                throw new ApiException(9999, "Failed to retrieve public key");
+            // 判断redis中是否有PUBKEY，如果有，则直接使用，如果没有，则获取并保存到redis中
+            Object pubKeyStr = redisUtil.get("pubKey");
+            String pubKey = null;
+            if (pubKeyStr == null) {
+                logger.info("PUBKEY not found in Redis, retrieving...");
+                HashMap<String, String> pubKeyHeaders = new HashMap<>();
+                pubKeyHeaders.put("Cookie", "zhengtoon_inner_auth=" + innerAuthCookie);
+                MyHttpResponse pubKeyResponse = httpRequester
+                        .execute(new MyHttpRequest("GET", BeiJingTax.PUBKEY_URL, pubKeyHeaders, null));
+                pubKey = JSONUtil.parseObj(pubKeyResponse.getBody()).getByPath("data.pubKey", String.class);
+                if (StrUtil.isBlank(pubKey)) {
+                    throw new ApiException(9999, "Failed to retrieve public key");
+                }
+                // Save PUBKEY to Redis , with a 5-hour expiration time
+                redisUtil.sSetAndTime("pubKey", 60 * 60 * 5, pubKey);
             }
+            pubKey = pubKeyStr.toString();
 
             // Step 5: Login by password
             String password = params.get("password") != null ? params.get("password").toString() : null;

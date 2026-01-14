@@ -160,7 +160,7 @@ public class UnifiedApiController {
      */
     @GetMapping("/toBJ")
     public void RedirectBeiJingHomePage(HttpServletResponse response) throws Exception {
-        // 构造入参
+        // 构造入参，写死一个账号登录
         HashMap<String, Object> userinfo = new HashMap<>();
         userinfo.put("password", "Aa13536022721");
         userinfo.put("username", "13660102924");

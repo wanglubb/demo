@@ -52,6 +52,8 @@ dependencies {
 	implementation 'org.jsoup:jsoup:1.17.2'
 	// 为保证单元测试可直接导入 jsoup，显式添加 test 作用域依赖
 	testImplementation 'org.jsoup:jsoup:1.17.2'
+	// 添加Redis支持
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 
