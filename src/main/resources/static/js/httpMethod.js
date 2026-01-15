@@ -244,6 +244,14 @@
     "test":"需要签名示例报文"
   }
 }`;
+                    }else if (selectedValue === 'homePageUrl') {
+                        paramsInput.value = `{
+  "method": "homePageUrl",
+  "params": {
+    "password":"密码",
+    "username":"用户名"
+  }
+}`;
                     }
                     else {
                         paramsInput.value = `{

@@ -90,9 +90,11 @@ public class GetHomePageUrlForBJ implements ApiHandler {
                     throw new ApiException(9999, "Failed to retrieve public key");
                 }
                 // Save PUBKEY to Redis , with a 5-hour expiration time
-                redisUtil.sSetAndTime("pubKey", 60 * 60 * 5, pubKey);
+                redisUtil.set("pubKey", pubKey, 5 * 60 * 60);
+            } else {
+                logger.info("PUBKEY found in Redis, using...");
+                pubKey = pubKeyStr.toString();
             }
-            pubKey = pubKeyStr.toString();
 
             // Step 5: Login by password
             String password = params.get("password") != null ? params.get("password").toString() : null;
@@ -102,7 +104,17 @@ public class GetHomePageUrlForBJ implements ApiHandler {
             if (StrUtil.isBlank(password)) {
                 throw new ApiException(9999, "密码不能为空");
             }
-            String encryptData = RSAEncrypt.rsaEncryptUnicodeLongExactJS(pubKey, requestJsonObject.toString());
+            // RSA加密，由于pubKey缓存5小时，所以不需要每次加密，同样进行缓存，缓存时间为pubKey的剩余时间
+            Object encryptDataVal = redisUtil.get("encryptData");
+            String encryptData = null;
+            if (encryptDataVal == null) {
+                logger.info("encryptData not found in Redis, retrieving...");
+                encryptData = RSAEncrypt.rsaEncryptUnicodeLongExactJS(pubKey, requestJsonObject.toString());
+                redisUtil.set("encryptData", encryptData, redisUtil.getExpire("pubKey"));
+            } else {
+                logger.info("encryptData found in Redis, using...");
+                encryptData = encryptDataVal.toString();
+            }
             HashMap<String, String> loginHeaders = new HashMap<>();
             loginHeaders.put("Cookie",
                     "zhengtoon_inner_auth=" + innerAuthCookie + "; zhengtoon_verify_captcha=" + captchaCookie);
@@ -155,6 +167,7 @@ public class GetHomePageUrlForBJ implements ApiHandler {
         } catch (ApiException e) {
             throw e; // Re-throw custom exceptions
         } catch (Exception e) {
+            logger.error("获取连接异常：" + e);
             throw new ApiException(9999, "Failed to get home page URL" + e);
         }
     }

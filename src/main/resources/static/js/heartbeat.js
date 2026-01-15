@@ -1,5 +1,5 @@
 // 心跳检测间隔（毫秒）
-const HEARTBEAT_INTERVAL = 5000;
+const HEARTBEAT_INTERVAL = 60 * 60 * 1000; // 1小时
 let heartbeatTimer = null;
 
 // 开始心跳检测

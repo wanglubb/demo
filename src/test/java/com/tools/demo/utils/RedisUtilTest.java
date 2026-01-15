@@ -21,7 +21,7 @@ class RedisUtilTest {
 
     @Test
     void testSetAndGet() {
-        String key = "test_key";
+        String key = "pubKey";
         // 测试获取值
         Object getResult = redisUtil.get(key);
         logger.info("获取的值是：" + getResult.toString());
