@@ -6,116 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>API 测试工具</title>
 	<link rel="stylesheet" href="css/index.css">
-	<!-- ...existing head elements... -->
-
-	<!-- 简单侧边栏样式（内联，避免修改其它静态文件） -->
-	<style>
-		/* 基本布局 + 磨砂背景 */
-		.app-layout {
-			display: flex;
-			min-height: 100vh;
-			font-family: Arial, Helvetica, sans-serif;
-			/* 全局磨砂透明效果 */
-			background: rgba(255, 255, 255, 0.28);
-			backdrop-filter: blur(10px) saturate(120%);
-			-webkit-backdrop-filter: blur(10px) saturate(120%);
-			box-shadow: 0 8px 30px rgba(16,24,40,0.06);
-			border: 1px solid rgba(255,255,255,0.12);
-		}
-
-		/* 磨砂侧边栏 */
-		.sidebar {
-			width: 220px;
-			background: rgba(255,255,255,0.12);
-			backdrop-filter: blur(10px);
-			-webkit-backdrop-filter: blur(10px);
-			border-right: 1px solid rgba(0,0,0,0.06);
-			padding: 20px 10px;
-			box-sizing: border-box;
-			box-shadow: 0 6px 20px rgba(16,24,40,0.06);
-			transition: background 240ms ease, transform 160ms ease;
-		}
-
-		.sidebar .logo {
-			font-weight: 700;
-			padding: 8px 12px;
-			font-size: 1.05em;
-			margin-bottom: 12px;
-		}
-
-		/* 较为平滑的链接交互效果 */
-		.sidebar nav a {
-			display: block;
-			padding: 10px 14px;
-			color: #333;
-			text-decoration: none;
-			border-radius: 6px;
-			margin-bottom: 6px;
-			transition: background 180ms ease, color 180ms ease, transform 120ms ease;
-		}
-
-		.sidebar nav a.active,
-		.sidebar nav a:hover {
-			background: rgba(14,78,173,0.08);
-			color: #0b5ed7;
-		}
-
-		.sidebar nav a:active {
-			transform: translateY(1px) scale(0.998);
-		}
-
-		/* 主区域：相对定位以支持覆盖式面板动画 */
-		.main {
-			flex: 1;
-			padding: 20px;
-			box-sizing: border-box;
-			background: #fff;
-			position: relative;
-			overflow: hidden;
-		}
-
-		/* 面板采用覆盖式，切换时使用透明和平移动画 */
-		.tab-content {
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			padding: 20px; /* 保持与 .main 一致的内边距 */
-			box-sizing: border-box;
-			/* 允许纵向滚动，支持移动端平滑惯性滚动 */
-			overflow-y: auto;
-			-webkit-overflow-scrolling: touch;
-			padding-bottom: 36px; /* 给底部内容和复制按钮留出空间 */
-			opacity: 0;
-			transform: translateY(8px) scale(0.998);
-			transition: opacity 260ms cubic-bezier(.2,.8,.2,1), transform 260ms cubic-bezier(.2,.8,.2,1);
-			pointer-events: none;
-		}
-
-		.tab-content.active {
-			opacity: 1;
-			transform: none;
-			pointer-events: auto;
-		}
-
-		/* 保持原有容器样式兼容 */
-		.container {
-			max-width: 1000px;
-			margin: 0 auto;
-		}
-
-		/* 响应时隐藏侧边栏 */
-		@media (max-width: 800px) {
-			.sidebar {
-				display: none;
-			}
-
-			.main {
-				padding: 12px;
-			}
-		}
-	</style>
+	<link rel="stylesheet" href="css/index_layout.css">
 </head>
 
 <body>
@@ -123,8 +14,9 @@
 		<div class="sidebar">
 			<div class="logo">工具集</div>
 			<nav>
-				<a href="javascript:void(0)" class="active" data-tab="tab-api" onclick="openTab('tab-api', this)">API 测试工具</a>
-				<a href="javascript:void(0)" data-tab="tab-sample1" onclick="openTab('tab-sample1', this)">示例标签 1</a>
+				<a href="javascript:void(0)" class="active" data-tab="tab-api" onclick="openTab('tab-api', this)">API
+					测试工具</a>
+				<a href="javascript:void(0)" data-tab="tab-sample1" onclick="openTab('tab-sample1', this)">快捷功能</a>
 				<a href="javascript:void(0)" data-tab="tab-sample2" onclick="openTab('tab-sample2', this)">示例标签 2</a>
 				<a href="javascript:void(0)" data-tab="tab-sample3" onclick="openTab('tab-sample3', this)">示例标签 3</a>
 			</nav>
@@ -210,8 +102,44 @@
 			<!-- 简单示例面板（占位，样式与主面板一致） -->
 			<div id="tab-sample1" class="tab-content">
 				<div class="container">
-					<h2>示例标签 1</h2>
-					<p>这里可以放置别的工具或说明文本，保持与主界面一致的风格。</p>
+					
+					<!-- 卡片式功能布局 -->
+					<div class="features-grid">			
+						<div class="feature-card" onclick="quickFunction('findOrder')">
+							<div class="card-icon">🔍</div>
+							<h3>代理IP获取</h3>
+							<p>查找可用代理IP</p>
+							<div class="card-footer">立即使用</div>
+						</div>
+						
+						<div class="feature-card" onclick="quickFunction('signInvoice')">
+							<div class="card-icon">✍️</div>
+							<h3>马来发票签名</h3>
+							<p>对发票JSON数据进行数字签名</p>
+							<div class="card-footer">立即使用</div>
+						</div>
+						
+						<div class="feature-card" onclick="quickFunction('checkTax')">
+							<div class="card-icon">📋</div>
+							<h3>纳税人状态查询</h3>
+							<p>验证企业状态</p>
+							<div class="card-footer">立即使用</div>
+						</div>
+						
+						<div class="feature-card" onclick="quickFunction('generateCert')">
+							<div class="card-icon">🔐</div>
+							<h3>证书生成</h3>
+							<p>生成加密所需的数字证书</p>
+							<div class="card-footer">立即使用</div>
+						</div>
+						
+						<div class="feature-card" onclick="quickFunction('getHomeUrl')">
+							<div class="card-icon">🏠</div>
+							<h3>北京工商网</h3>
+							<p>免登录跳转到北京工商注册网</p>
+							<div class="card-footer">立即跳转</div>
+						</div>
+					</div>
 				</div>
 			</div>
 
@@ -246,6 +174,28 @@
 				a.classList.remove('active');
 			});
 			if (anchor) anchor.classList.add('active');
+		}
+
+		// 为快捷功能添加处理函数
+		function quickFunction(methodName) {
+			
+
+			if (methodName === 'findOrder') {
+				alert('测试！');
+			} else if (methodName === 'signInvoice') {
+				alert('待密签名功能未完成！');
+			} else if (methodName === 'checkTax') {
+				alert('待纳税人状态查询功能未完成！');
+			} else if (methodName === 'generateCert') {
+				alert('待证书生成功能未完成！');
+			} else if (methodName === 'getHomeUrl') {
+				window.open('http://8.163.1.140:8080/router/toBJ');
+			}
+			
+			// 如果需要跳转到API测试页面并预设参数，可以取消下面的注释
+/* 			document.getElementById('method-input').value = methodName;
+			openTab('tab-api', document.querySelector('[data-tab="tab-api"]')); */
+			
 		}
 
 		// 保证在移动端或小屏下也能把主面板显示出来（当侧边栏被隐藏时）

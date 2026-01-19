@@ -1,0 +1,107 @@
+/* 基本布局 + 磨砂背景 */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    /* 全局磨砂透明效果 */
+    background: rgba(255, 255, 255, 0.28);
+    backdrop-filter: blur(10px) saturate(120%);
+    -webkit-backdrop-filter: blur(10px) saturate(120%);
+    box-shadow: 0 8px 30px rgba(16, 24, 40, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* 磨砂侧边栏 */
+.sidebar {
+    width: 220px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-right: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 20px 10px;
+    box-sizing: border-box;
+    box-shadow: 0 6px 20px rgba(16, 24, 40, 0.06);
+    transition: background 240ms ease, transform 160ms ease;
+}
+
+.sidebar .logo {
+    font-weight: 700;
+    padding: 8px 12px;
+    font-size: 1.05em;
+    margin-bottom: 12px;
+}
+
+/* 较为平滑的链接交互效果 */
+.sidebar nav a {
+    display: block;
+    padding: 10px 14px;
+    color: #333;
+    text-decoration: none;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    transition: background 180ms ease, color 180ms ease, transform 120ms ease;
+}
+
+.sidebar nav a.active,
+.sidebar nav a:hover {
+    background: rgba(14, 78, 173, 0.08);
+    color: #0b5ed7;
+}
+
+.sidebar nav a:active {
+    transform: translateY(1px) scale(0.998);
+}
+
+/* 主区域：相对定位以支持覆盖式面板动画 */
+.main {
+    flex: 1;
+    padding: 20px;
+    box-sizing: border-box;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 面板采用覆盖式，切换时使用透明和平移动画 */
+.tab-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 20px;
+    /* 保持与 .main 一致的内边距 */
+    box-sizing: border-box;
+    /* 允许纵向滚动，支持移动端平滑惯性滚动 */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 36px;
+    /* 给底部内容和复制按钮留出空间 */
+    opacity: 0;
+    transform: translateY(8px) scale(0.998);
+    transition: opacity 260ms cubic-bezier(.2, .8, .2, 1), transform 260ms cubic-bezier(.2, .8, .2, 1);
+    pointer-events: none;
+}
+
+.tab-content.active {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+}
+
+/* 保持原有容器样式兼容 */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* 响应时隐藏侧边栏 */
+@media (max-width: 800px) {
+    .sidebar {
+        display: none;
+    }
+
+    .main {
+        padding: 12px;
+    }
+}
