@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.tools.demo.eunm.HttpEnum;
 import com.tools.demo.exceptionHandlers.ApiException;
+import com.tools.demo.inter.imp.EnttraCheck;
 import com.tools.demo.inter.imp.GetHomePageUrlForBJ;
 import com.tools.demo.utils.httpUtils.MyHttpClientFactory;
 import com.tools.demo.utils.httpUtils.MyHttpRequest;
@@ -46,9 +47,9 @@ public class HttpUtilTest {
             reHttpResponse.getHeaders().forEach((key, value) -> System.out.println(key + " : " + value));
             int code = reHttpResponse.getStatusCode();
             if (403 == code) {
-                System.out.println(  "IP已被封禁，需要更换IP");
-            } else{
-                System.out.println( reHttpResponse.getCookie("SESSIONID"));
+                System.out.println("IP已被封禁，需要更换IP");
+            } else {
+                System.out.println(reHttpResponse.getCookie("SESSIONID"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,6 +102,22 @@ public class HttpUtilTest {
             } else {
                 System.out.println("未发生重定向");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("请求失败: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testGenerateCaptcha() {
+        HashMap<String, Object> userinfo = new HashMap<>();
+
+        userinfo.put("taxNumber", "91130402MAC7WGK780");
+
+        try {
+            EnttraCheck enttraCheck = new EnttraCheck();
+            ApiResponse handle = enttraCheck.handle(userinfo);
+            System.out.println("响应状态码：" + handle.getCode() + " 响应数据：" + handle.getData());
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("请求失败: " + e.getMessage());

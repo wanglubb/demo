@@ -26,7 +26,7 @@ public class AuthController {
 
     // 简单的用户名密码验证（实际项目中应该从数据库获取）
     private static final String DEFAULT_USERNAME = "demo";
-    private static final String DEFAULT_PASSWORD = "test2026";
+    private static final String DEFAULT_PASSWORD = "demo123";
 
     /**
      * 用户登录接口

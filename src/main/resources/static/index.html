@@ -105,19 +105,20 @@
 					
 					<!-- 卡片式功能布局 -->
 					<div class="features-grid">			
-						<div class="feature-card" onclick="quickFunction('findOrder')">
+						
+						 <div class="feature-card" onclick="quickFunction('findOrder')">
 							<div class="card-icon">🔍</div>
 							<h3>代理IP获取</h3>
 							<p>查找可用代理IP</p>
 							<div class="card-footer">立即使用</div>
 						</div>
 						
-						<div class="feature-card" onclick="quickFunction('signInvoice')">
+						<!--<div class="feature-card" onclick="quickFunction('signInvoice')">
 							<div class="card-icon">✍️</div>
 							<h3>马来发票签名</h3>
 							<p>对发票JSON数据进行数字签名</p>
 							<div class="card-footer">立即使用</div>
-						</div>
+						</div> -->
 						
 						<div class="feature-card" onclick="quickFunction('checkTax')">
 							<div class="card-icon">📋</div>
@@ -126,12 +127,12 @@
 							<div class="card-footer">立即使用</div>
 						</div>
 						
-						<div class="feature-card" onclick="quickFunction('generateCert')">
+			<!-- 			<div class="feature-card" onclick="quickFunction('generateCert')">
 							<div class="card-icon">🔐</div>
 							<h3>证书生成</h3>
 							<p>生成加密所需的数字证书</p>
 							<div class="card-footer">立即使用</div>
-						</div>
+						</div> -->
 						
 						<div class="feature-card" onclick="quickFunction('getHomeUrl')">
 							<div class="card-icon">🏠</div>
@@ -159,6 +160,71 @@
 		</div>
 	</div>
 
+	<!-- 企业状态查询模态框 -->
+	<div id="tax-query-modal" class="modal-overlay">
+		<div class="modal-content tax-query-modal">
+			<div class="modal-header">
+				<h3>企业状态查询</h3>
+				<button id="close-tax-modal" class="modal-close-btn">&times;</button>
+			</div>
+			<div class="modal-body">
+				<form id="tax-query-form">
+					<div class="form-group">
+						<label for="ent-name">企业名称:</label>
+						<input type="text" id="ent-name" class="form-control" placeholder="请输入企业全称" required />
+					</div>
+					
+					<div class="form-group">
+						<label for="tax-number">纳税人识别号:</label>
+						<input type="text" id="tax-number" class="form-control" placeholder="请输入纳税人识别号" required />
+					</div>
+					
+					<div class="form-actions">
+						<button type="button" class="btn cancel-btn" id="cancel-tax-query">取消</button>
+						<button type="button" id="submit-tax-query" class="btn submit-btn">查询</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<!-- 企业状态查询结果模态框 -->
+	<div id="tax-result-modal" class="modal-overlay">
+		<div class="modal-content tax-result-modal">
+			<div class="modal-header">
+				<h3>企业状态查询结果</h3>
+				<button id="close-result-modal" class="modal-close-btn">&times;</button>
+			</div>
+			<div class="modal-body">
+				<div id="tax-result-content">
+					<table class="result-table">
+						<tbody>
+							<tr>
+								<th>企业名称</th>
+								<td id="nsrmc-value"></td>
+							</tr>
+							<tr>
+								<th>纳税人识别号</th>
+								<td id="nsrsbh-value"></td>
+							</tr>
+							<tr>
+								<th>纳税人状态</th>
+								<td id="nsrztmc-value"></td>
+							</tr>
+							<tr>
+								<th>主管税务机关</th>
+								<td id="swjgmc-value"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="form-actions">
+					<button type="button" class="btn primary-btn" id="close-result-and-back">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- 简单的切换逻辑，确保不影响已有全局函数 -->
 	<script>
 		function openTab(tabId, anchor) {
@@ -179,28 +245,22 @@
 		// 为快捷功能添加处理函数
 		function quickFunction(methodName) {
 			
-
-			if (methodName === 'findOrder') {
-				alert('测试！');
-			} else if (methodName === 'signInvoice') {
-				alert('待密签名功能未完成！');
-			} else if (methodName === 'checkTax') {
-				alert('待纳税人状态查询功能未完成！');
-			} else if (methodName === 'generateCert') {
-				alert('待证书生成功能未完成！');
-			} else if (methodName === 'getHomeUrl') {
+			if (methodName === 'checkTax') {
+				showTaxQueryModal();
+			}else if (methodName === 'getHomeUrl') {
 				window.open('http://8.163.1.140:8080/router/toBJ');
+			}else{
+				// 跳转到API测试页面并预设参数
+				document.getElementById('method-input').value = methodName;
+				openTab('tab-api', document.querySelector('[data-tab="tab-api"]'));
 			}
 			
-			// 如果需要跳转到API测试页面并预设参数，可以取消下面的注释
-/* 			document.getElementById('method-input').value = methodName;
-			openTab('tab-api', document.querySelector('[data-tab="tab-api"]')); */
 			
 		}
 
 		// 保证在移动端或小屏下也能把主面板显示出来（当侧边栏被隐藏时）
 		window.addEventListener('resize', function () {
-			// noop for now, placeholder for未来扩展
+			// noop for now, placeholder for future extension
 		});
 	</script>
 

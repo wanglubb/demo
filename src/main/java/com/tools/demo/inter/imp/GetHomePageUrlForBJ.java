@@ -60,7 +60,7 @@ public class GetHomePageUrlForBJ implements ApiHandler {
             }
 
             // Step 2: Decode CAPTCHA using ChaoJiYing
-            String captcha = ChaoJiYing.PostPic_base64(base64);
+            String captcha = ChaoJiYing.PostPic_base64(base64,"4004");
             if (StrUtil.isBlank(captcha)) {
                 throw new ApiException(9999, "Failed to decode CAPTCHA");
             }

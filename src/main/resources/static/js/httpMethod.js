@@ -294,6 +294,105 @@
                     }
                 }
 
+                // 显示企业状态查询模态框
+                function showTaxQueryModal() {
+                    const modal = document.getElementById('tax-query-modal');
+                    modal.style.display = 'flex';
+                }
+
+                // 关闭企业状态查询模态框
+                function closeTaxQueryModal() {
+                    const modal = document.getElementById('tax-query-modal');
+                    modal.style.display = 'none';
+                }
+
+                // 关闭结果模态框
+                function closeTaxResultModal() {
+                    const modal = document.getElementById('tax-result-modal');
+                    modal.style.display = 'none';
+                }
+
+                // 执行税务检查
+                async function performTaxCheck() {
+                    const entName = document.getElementById('ent-name').value;
+                    const taxNumber = document.getElementById('tax-number').value;
+                    
+                    if (!entName && !taxNumber) {
+                        alert('请填写完整的企业信息');
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('/router/open', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                method: 'enttraCheck',
+                                params: {
+                                    entName: entName,
+                                    taxNumber: taxNumber
+                                }
+                            })
+                        });
+
+                        const result = await response.json();
+
+                        if (result.code === 200) {
+                            // 显示查询结果
+                            displayTaxResult(result);
+                        } else {
+                            alert(`查询失败: ${result.message || '未知错误'}`);
+                        }
+                    } catch (error) {
+                        console.error('查询错误:', error);
+                        alert(`查询失败: ${error.message}`);
+                    }
+                }
+
+                // 显示查询结果
+                function displayTaxResult(data) {
+                    // 隐藏查询输入模态框
+                    closeTaxQueryModal();
+                    
+                    // 解析响应数据，提取Result中的指定字段
+                    let nsrmc = '';
+                    let nsrsbh = '';
+                    let nsrztMc = '';
+                    let swjgmc = '';
+                    
+                    // 数据结构是 data.data.Response.Data.Result (数组)
+                    if (data && data.data && data.data.Response && data.data.Response.Data && data.data.Response.Data.Result) {
+                        const result = data.data.Response.Data.Result;
+                        
+                        // Result 是一个数组
+                        if (Array.isArray(result) && result.length > 0) {
+                            const firstItem = result[0];
+                            nsrmc = firstItem.nsrmc || '';
+                            nsrsbh = firstItem.nsrsbh || '';
+                            nsrztMc = firstItem.nsrztMc || '';
+                            swjgmc = firstItem.swjgmc || '';
+                        } else {
+                            // 如果不是数组（虽然按文档应该是数组）
+                            nsrmc = result.nsrmc || '';
+                            nsrsbh = result.nsrsbh || '';
+                            nsrztMc = result.nsrztMc || '';
+                            swjgmc = result.swjgmc || '';
+                        }
+                    }
+
+                    // 更新结果显示区域
+                    document.getElementById('nsrmc-value').textContent = nsrmc;
+                    document.getElementById('nsrsbh-value').textContent = nsrsbh;
+                    document.getElementById('nsrztmc-value').textContent = nsrztMc;
+                    document.getElementById('swjgmc-value').textContent = swjgmc;
+                    
+                    // 显示结果模态框
+                    const modal = document.getElementById('tax-result-modal');
+                    modal.style.display = 'flex';
+                }
+
                 // 检查登录状态（登录后调用 fetchMethods）
                 async function checkLoginStatus() {
                     try {
@@ -320,9 +419,19 @@
                     }
                 }
 
-                // 加载页面检查登录状态
+                // 初始化事件监听器
                 document.addEventListener('DOMContentLoaded', function () {
                     console.log('API测试工具已加载完成');
+                    
+                    // 企业状态查询模态框相关事件
+                    document.getElementById('close-tax-modal').addEventListener('click', closeTaxQueryModal);
+                    document.getElementById('cancel-tax-query').addEventListener('click', closeTaxQueryModal);
+                    document.getElementById('submit-tax-query').addEventListener('click', performTaxCheck);
+                    
+                    // 结果模态框相关事件
+                    document.getElementById('close-result-modal').addEventListener('click', closeTaxResultModal);
+                    document.getElementById('close-result-and-back').addEventListener('click', closeTaxResultModal);
+                    
                     checkLoginStatus(); // 检查登录状态并在成功后加载方法列表
                     startHeartbeat();   // 开始心跳检测
                 });
