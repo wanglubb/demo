@@ -294,11 +294,6 @@
                     }
                 }
 
-                // 显示企业状态查询模态框
-                function showTaxQueryModal() {
-                    const modal = document.getElementById('tax-query-modal');
-                    modal.style.display = 'flex';
-                }
 
                 // 关闭企业状态查询模态框
                 function closeTaxQueryModal() {

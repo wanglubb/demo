@@ -1,0 +1,137 @@
+{
+	"result": "success",
+	"data": [
+		{
+			"districtCn": "北京",
+			"district": "110000"
+		},
+		{
+			"districtCn": "北京市",
+			"district": "110000"
+		},
+		{
+			"districtCn": "北京市东城区",
+			"district": "110101"
+		},
+		{
+			"districtCn": "北京市西城区",
+			"district": "110102"
+		},
+		{
+			"districtCn": "北京西城",
+			"district": "110102"
+		},
+		{
+			"districtCn": "北京朝阳",
+			"district": "110105"
+		},
+		{
+			"districtCn": "北京市朝阳区",
+			"district": "110105"
+		},
+		{
+			"districtCn": "北京丰台",
+			"district": "110106"
+		},
+		{
+			"districtCn": "北京市丰台区",
+			"district": "110106"
+		},
+		{
+			"districtCn": "北京石景山",
+			"district": "110107"
+		},
+		{
+			"districtCn": "北京市石景山区",
+			"district": "110107"
+		},
+		{
+			"districtCn": "北京海淀",
+			"district": "110108"
+		},
+		{
+			"districtCn": "北京市海淀区",
+			"district": "110108"
+		},
+		{
+			"districtCn": "北京门头沟",
+			"district": "110109"
+		},
+		{
+			"districtCn": "北京市门头沟区",
+			"district": "110109"
+		},
+		{
+			"districtCn": "北京房山",
+			"district": "110111"
+		},
+		{
+			"districtCn": "北京市房山区",
+			"district": "110111"
+		},
+		{
+			"districtCn": "北京市通州区",
+			"district": "110112"
+		},
+		{
+			"districtCn": "北京通州",
+			"district": "110112"
+		},
+		{
+			"districtCn": "北京市顺义区",
+			"district": "110113"
+		},
+		{
+			"districtCn": "北京顺义",
+			"district": "110113"
+		},
+		{
+			"districtCn": "北京昌平",
+			"district": "110114"
+		},
+		{
+			"districtCn": "北京市昌平区",
+			"district": "110114"
+		},
+		{
+			"districtCn": "北京大兴",
+			"district": "110115"
+		},
+		{
+			"districtCn": "北京市大兴区",
+			"district": "110115"
+		},
+		{
+			"districtCn": "北京怀柔",
+			"district": "110116"
+		},
+		{
+			"districtCn": "北京市怀柔区",
+			"district": "110116"
+		},
+		{
+			"districtCn": "北京平谷",
+			"district": "110117"
+		},
+		{
+			"districtCn": "北京市平谷区",
+			"district": "110117"
+		},
+		{
+			"districtCn": "北京密云",
+			"district": "110118"
+		},
+		{
+			"districtCn": "北京市密云区",
+			"district": "110118"
+		},
+		{
+			"districtCn": "北京市延庆区",
+			"district": "110119"
+		},
+		{
+			"districtCn": "北京延庆",
+			"district": "110119"
+		}
+	]
+}

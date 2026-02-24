@@ -60,7 +60,7 @@ public class GetHomePageUrlForBJ implements ApiHandler {
             }
 
             // Step 2: Decode CAPTCHA using ChaoJiYing
-            String captcha = ChaoJiYing.PostPic_base64(base64,"4004");
+            String captcha = ChaoJiYing.PostPic_base64(base64, "4004");
             if (StrUtil.isBlank(captcha)) {
                 throw new ApiException(9999, "Failed to decode CAPTCHA");
             }
@@ -159,8 +159,9 @@ public class GetHomePageUrlForBJ implements ApiHandler {
             logger.info("响应码：" + code);
             if (403 == code) {
                 result.put("SESSIONID", "服务器所在IP被封禁，无法获取SESSION");
-            } else {
+            } else {// 如果SESSIONID不存在，则保存到redis中
                 result.put("SESSIONID", sessiResponse.getCookie("SESSIONID"));
+                redisUtil.set("SESSIONID", sessiResponse.getCookie("SESSIONID"), 60 * 60 * 1);// 5小时
             }
 
             return ApiResponse.success(JSONUtil.toJsonStr(result));

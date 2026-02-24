@@ -7,6 +7,7 @@
 	<title>API 测试工具</title>
 	<link rel="stylesheet" href="css/index.css">
 	<link rel="stylesheet" href="css/index_layout.css">
+	<link rel="stylesheet" href="css/index_map.css">
 </head>
 
 <body>
@@ -14,10 +15,10 @@
 		<div class="sidebar">
 			<div class="logo">工具集</div>
 			<nav>
+				<a href="javascript:void(0)" data-tab="tab-sample1" onclick="openTab('tab-sample1', this)">快捷功能</a>
 				<a href="javascript:void(0)" class="active" data-tab="tab-api" onclick="openTab('tab-api', this)">API
 					测试工具</a>
-				<a href="javascript:void(0)" data-tab="tab-sample1" onclick="openTab('tab-sample1', this)">快捷功能</a>
-				<a href="javascript:void(0)" data-tab="tab-sample2" onclick="openTab('tab-sample2', this)">示例标签 2</a>
+				<a href="javascript:void(0)" data-tab="tab-sample2" onclick="openTab('tab-map', this)">数据地图</a>
 				<a href="javascript:void(0)" data-tab="tab-sample3" onclick="openTab('tab-sample3', this)">示例标签 3</a>
 			</nav>
 		</div>
@@ -140,23 +141,80 @@
 							<p>免登录跳转到北京工商注册网</p>
 							<div class="card-footer">立即跳转</div>
 						</div>
+						<!--核名-->
+						<div class="feature-card" onclick="quickFunction('checkName')">
+							<div class="card-icon">📝</div>
+							<h3>企业核名-北京</h3>
+							<p>查询企业名称是否可用</p>
+							<div class="card-footer">立即使用</div>
+						</div>
+						<!--获取验证码-->
 					</div>
 				</div>
 			</div>
 
-			<div id="tab-sample2" class="tab-content">
+			<div id="tab-map" class="tab-content">
 				<div class="container">
-					<h2>示例标签 2</h2>
-					<p>占位内容：例如日志查看、配置面板等。</p>
+					<div class="map-title">中国省份数据分布图</div>
+					<div class="map-tips">双击省份可编辑数据，鼠标悬停查看详情</div>
+					
+					<div class="map-container" id="mapContainer">
+						<!-- ECharts地图将在JS中生成 -->
+						<div id="chinaMap" style="width: 100%; height: 100%;"></div>
+						
+						<!-- 数据导入控件 -->
+						<div class="data-import-section">
+							<div class="import-title">数据导入</div>
+							<div class="import-controls">
+								<div class="file-input-wrapper">
+									<div class="file-input-button">选择CSV文件</div>
+									<input type="file" id="csvFileInput" accept=".csv" />
+								</div>
+								
+								<button class="import-btn" id="importBtn">导入数据</button>
+							</div>
+							
+							<div class="import-info" id="importInfo" style="margin-top: 10px; font-size: 12px; color: #666;"></div>
+						</div>
+						
+						<!-- 导出按钮 -->
+						<button class="export-btn" id="exportBtn">导出地图</button>
+						
+						<!-- 详细信息提示框 -->
+						<div class="tooltip" id="tooltip"></div>
+						
+						
+					</div>
+					
+					<!-- 编辑弹窗遮罩 -->
+					<div class="modal-overlay" id="editModalOverlay"></div>
+					
+					<!-- 编辑弹窗 -->
+					<div class="edit-modal" id="editModal">
+						<div class="edit-form">
+							<div class="form-row">
+								<label for="provinceName">省份名称</label>
+								<input type="text" id="provinceName" readonly />
+							</div>
+							<div class="form-row">
+								<label for="approvedUsers">核定户数</label>
+								<input type="number" id="approvedUsers" />
+							</div>
+							<div class="form-row">
+								<label for="actualUsers">使用户数</label>
+								<input type="number" id="actualUsers" />
+							</div>
+							
+							<div class="modal-buttons">
+								<button class="modal-btn cancel-btn" id="cancelEditBtn">取消</button>
+								<button class="modal-btn save-btn" id="saveEditBtn">保存</button>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 
-			<div id="tab-sample3" class="tab-content">
-				<div class="container">
-					<h2>示例标签 3</h2>
-					<p>占位内容：自定义扩展区。</p>
-				</div>
-			</div>
+			
 		</div>
 	</div>
 
@@ -225,48 +283,58 @@
 		</div>
 	</div>
 
-	<!-- 简单的切换逻辑，确保不影响已有全局函数 -->
-	<script>
-		function openTab(tabId, anchor) {
-			// 切换主体面板
-			document.querySelectorAll('.tab-content').forEach(function (el) {
-				el.classList.remove('active');
-			});
-			var target = document.getElementById(tabId);
-			if (target) target.classList.add('active');
+	<!-- 企业核名模态框 -->
+	<div id="check-name-modal" class="modal-overlay">
+		<div class="modal-content check-name-modal">
+			<div class="modal-header">
+				<h3>企业核名 - 北京</h3>
+				<button id="close-check-name-modal" class="modal-close-btn">&times;</button>
+			</div>
+			<div class="modal-body">
+				<form id="check-name-form">
+					<div class="form-group">
+						<label for="areaname">地区:</label>
+						<input type="text" id="areaname" class="form-control" placeholder="请输入地区" required />
+					</div>
+					
+					<div class="form-group">
+						<label for="enttra">企业简称:</label>
+						<input type="text" id="enttra" class="form-control" placeholder="请输入企业简称" required />
+					</div>
+					
+					<div class="form-group">
+						<label for="traind">行业特点:</label>
+						<input type="text" id="traind" class="form-control" placeholder="请输入行业特点" required />
+					</div>
+					
+					<div class="form-group">
+						<label for="dmvalue">行业代码:</label>
+						<input type="text" id="dmvalue" class="form-control" placeholder="请输入行业代码" required />
+					</div>
+					
+					<div class="form-group">
+						<label for="entname">企业名称:</label>
+						<input type="text" id="entname" class="form-control" placeholder="请输入完整企业名称" required />
+					</div>
+					
+					<div class="form-actions">
+						<button type="button" class="btn cancel-btn" id="cancel-check-name">取消</button>
+						<button type="button" id="submit-check-name" class="btn submit-btn">检查</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
-			// 切换侧边栏样式
-			document.querySelectorAll('.sidebar nav a').forEach(function (a) {
-				a.classList.remove('active');
-			});
-			if (anchor) anchor.classList.add('active');
-		}
-
-		// 为快捷功能添加处理函数
-		function quickFunction(methodName) {
-			
-			if (methodName === 'checkTax') {
-				showTaxQueryModal();
-			}else if (methodName === 'getHomeUrl') {
-				window.open('http://8.163.1.140:8080/router/toBJ');
-			}else{
-				// 跳转到API测试页面并预设参数
-				document.getElementById('method-input').value = methodName;
-				openTab('tab-api', document.querySelector('[data-tab="tab-api"]'));
-			}
-			
-			
-		}
-
-		// 保证在移动端或小屏下也能把主面板显示出来（当侧边栏被隐藏时）
-		window.addEventListener('resize', function () {
-			// noop for now, placeholder for future extension
-		});
-	</script>
-
+	<!-- 引入ECharts库 - 使用本地文件 -->
+	<script src="js/echarts.min.js"></script>
+	
+	
 	<!-- 保持原有脚本引用顺序 -->
-	<script src="js/heartbeat.js"></script>
-	<script src="js/httpMethod.js"></script>
+	<script src="js/index.js"></script><!-- 主页脚本 -->
+	<script src="js/heartbeat.js"></script> <!-- 心跳检测 -->
+	<script src="js/httpMethod.js"></script><!-- HTTP请求方法 -->
+	<script src="js/map.js"></script> <!-- 地图功能 -->
 </body>
 
 </html>

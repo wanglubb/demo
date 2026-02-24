@@ -18,8 +18,11 @@ import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.entity.EntityBuilder;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.http.message.BasicHeader;
 
 /**
@@ -51,9 +54,7 @@ public class ApacheHttpRequester implements HttpRequester {
 
         // 设置请求体
         if (request.getBody() != null && request.getBody().length > 0) {
-            HttpEntity entity = EntityBuilder.create()
-                    .setBinary(request.getBody())
-                    .build();
+            HttpEntity entity = createEntityFromRequest(request);
             httpRequest.setEntity(entity);
         }
 
@@ -71,6 +72,30 @@ public class ApacheHttpRequester implements HttpRequester {
         });
 
         return response;
+    }
+
+    /**
+     * 根据请求内容和头部信息创建适当的实体
+     */
+    private HttpEntity createEntityFromRequest(MyHttpRequest request) {
+        String contentType = "";
+        if (request.getHeaders() != null) {
+            contentType = request.getHeaders().getOrDefault("Content-Type", "").toLowerCase();
+        }
+
+        if (contentType.contains("application/x-www-form-urlencoded")) {
+            // 处理URL编码的表单数据
+            String bodyStr = new String(request.getBody());
+            return new StringEntity(bodyStr, ContentType.APPLICATION_FORM_URLENCODED);
+        } else if (contentType.contains("multipart/form-data")) {
+            // 处理multipart表单数据
+            String bodyStr = new String(request.getBody());
+            ContentType parsedContentType = ContentType.parse(contentType);
+            return new StringEntity(bodyStr, parsedContentType);
+        } else {
+            // 默认处理二进制数据
+            return new ByteArrayEntity(request.getBody(), ContentType.parse(contentType));
+        }
     }
 
     /**

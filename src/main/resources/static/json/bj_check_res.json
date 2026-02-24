@@ -1,0 +1,122 @@
+{
+	"result": "success",
+	"data": {
+		"allMsg": [
+			{
+				"msgList": [
+					{
+						"entName": "北京威武信息咨询有限公司",
+						"traInd": "威武信息咨询",
+						"nameStateCo": "20",
+						"nameTypeCo": "1",
+						"nameId": "ff8080815b575d42015b5fd7ddfa38d8",
+						"entTra": "威武",
+						"nameInd": "信息咨询",
+						"industryCode": "7243",
+						"uniteCo": "72",
+						"savePerTo": "2999-12-30 00:00:00",
+						"superNameId": "",
+						"passType": "1"
+					}
+				],
+				"msg": "主体名称字号+行业与已登记、核准的名称字号+行业表述相同。",
+				"name": "名称相同:字号加行业表述相同校验",
+				"type": "lock",
+				"ruleId": "bjaic_traind_same_verify",
+				"ruleStepId": "NM-B-0004",
+				"desc": "字号加行业表述相同校验"
+			},
+			{
+				"msgList": [
+					{
+						"entName": "北京威武创新科技有限公司",
+						"traInd": "威武创新科技",
+						"uniteCo": "75",
+						"nameInd": "创新科技",
+						"entTra": "威武",
+						"tradPiny": "WEI_WU",
+						"nameTypeCo": "1",
+						"nameStateCo": "18",
+						"nameId": "ff8080817d7aa6ea017d7efe79c22ec9",
+						"industryCode": "7590",
+						"allprotect": "",
+						"savePerTo": "",
+						"superNameId": "",
+						"passType": "5"
+					}
+				],
+				"msg": "主体名称字号与同一企业登记机关已登记、核准的关联行业企业名称字号相同，行业表述不同但含义相同。",
+				"name": "名称相近:关联行业行业企业字号相同校验",
+				"type": "prompt",
+				"ruleId": "bjaic_entTraAndRelative_same_verify",
+				"ruleStepId": "NM-B-0007",
+				"desc": "关联行业行业企业字号相同校验"
+			},
+			{
+				"msgList": [
+					{
+						"protectCode": "",
+						"passType": "5",
+						"entName": "威武卓越管理咨询（北京）有限公司",
+						"savePerTo": "2026.08.10 09:29:03",
+						"entTra": "威武卓越",
+						"nameInd": "管理咨询",
+						"traInd": "威武卓越管理咨询",
+						"nameId": "ff808081520c104301520f8f82ac7804",
+						"unitoCo": "72"
+					},
+					{
+						"protectCode": "",
+						"passType": "5",
+						"entName": "中保威武国际安全顾问（北京）有限公司",
+						"savePerTo": "",
+						"entTra": "中保威武",
+						"nameInd": "国际安全顾问",
+						"traInd": "中保威武国际安全顾问",
+						"nameId": "ff8080815ab28662015ad4fa1d575f3b",
+						"unitoCo": "72"
+					},
+					{
+						"protectCode": "",
+						"passType": "5",
+						"entName": "北京威武信息咨询有限公司",
+						"savePerTo": "2999.12.30 00:00:00",
+						"entTra": "威武",
+						"nameInd": "信息咨询",
+						"traInd": "威武信息咨询",
+						"nameId": "ff8080815b575d42015b5fd7ddfa38d8",
+						"unitoCo": "72"
+					},
+					{
+						"protectCode": "",
+						"passType": "5",
+						"entName": "北京京奥威武教育咨询有限公司",
+						"savePerTo": "",
+						"entTra": "京奥威武",
+						"nameInd": "教育咨询",
+						"traInd": "京奥威武教育咨询",
+						"nameId": "338e113c0c1f473c9b660d9ed592f8e6",
+						"unitoCo": "72"
+					},
+					{
+						"protectCode": "",
+						"passType": "5",
+						"entName": "威武通锦（北京）管理咨询有限公司",
+						"savePerTo": "2026.02.09 18:00:14",
+						"entTra": "威武通锦",
+						"nameInd": "管理咨询",
+						"traInd": "威武通锦管理咨询",
+						"nameId": "f27db77ca94844e7b6f3bdf9da0ed9ed",
+						"unitoCo": "72"
+					}
+				],
+				"msg": "主体名称字号与同一企业登记机关已登记、核准的同行业企业名称的字号存在包含或被包含关系。",
+				"name": "名称相近:同行业企业名称包含或被包含校验",
+				"type": "prompt",
+				"ruleId": "bjaic_enttraContainAndIndustrySame_verify",
+				"ruleStepId": "NM-B-0014",
+				"desc": "同行业企业名称包含或被包含校验"
+			}
+		]
+	}
+}
