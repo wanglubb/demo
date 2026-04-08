@@ -104,11 +104,28 @@ function initMap() {
                 roam: true, // 允许缩放和平移
                 zoom: 1.2, // 初始缩放级别
                 center: [104.114129, 37.550339], // 中国中心坐标
+                label: {
+                    show: true,
+                    fontSize: 9,
+                    color: '#333',
+                    formatter: function(params) {
+                        if (params.data && params.data.value > 0) {
+                            return params.data.value;
+                        }
+                        return '';
+                    }
+                },
                 itemStyle: {
                     borderColor: '#fff',
                     borderWidth: 0.5
                 },
                 emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: 11,
+                        color: '#1e293b',
+                        fontWeight: 'bold'
+                    },
                     itemStyle: {
                         areaColor: '#f3f300',
                         shadowOffsetX: 0,
@@ -130,7 +147,7 @@ function initMap() {
     
     // 处理地图点击事件
     myChart.on('dblclick', function(params) {
-        if (params.name && params.data) {
+        if (params.name) {
             handleProvinceDoubleClick(params);
         }
     });
@@ -341,20 +358,28 @@ function closeEditModal() {
     document.getElementById('editModalOverlay').classList.remove('active');
 }
 
-// 导出地图功能（简化版，仅提示功能）
+// 导出地图为图片
 function exportMap() {
-    alert('地图导出功能正在开发中...\n此功能将允许您将当前地图保存为图片。');
-    
-    // 这里可以集成html2canvas或其他截图库来实现真正的导出功能
-    // 示例：
-    /*
-    html2canvas(document.getElementById('mapContainer')).then(canvas => {
+    if (!myChart) {
+        alert('地图尚未初始化，无法导出');
+        return;
+    }
+    try {
+        const url = myChart.getDataURL({
+            type: 'png',
+            pixelRatio: 2,
+            backgroundColor: '#e0f2fe'
+        });
         const link = document.createElement('a');
-        link.download = 'map.png';
-        link.href = canvas.toDataURL('image/png');
+        link.download = '中国省份数据分布图.png';
+        link.href = url;
+        document.body.appendChild(link);
         link.click();
-    });
-    */
+        document.body.removeChild(link);
+    } catch (e) {
+        console.error('导出地图失败:', e);
+        alert('导出失败，请确保地图已加载数据后再试');
+    }
 }
 
 // 刷新地图显示
