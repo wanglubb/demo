@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tools.demo.vo.ApiResponse;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import jakarta.servlet.http.HttpSession;
 
 /**
@@ -27,6 +29,19 @@ public class AuthController {
     // 简单的用户名密码验证（实际项目中应该从数据库获取）
     private static final String DEFAULT_USERNAME = "demo";
     private static final String DEFAULT_PASSWORD = "demo123";
+
+    @Value("${app.version:unknown}")
+    private String appVersion;
+
+    /**
+     * 获取应用版本号
+     */
+    @GetMapping("/version")
+    public ApiResponse getVersion() {
+        Map<String, Object> data = new java.util.HashMap<>();
+        data.put("version", appVersion);
+        return ApiResponse.success(data);
+    }
 
     /**
      * 用户登录接口

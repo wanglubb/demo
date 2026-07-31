@@ -14,6 +14,7 @@ import com.tools.demo.vo.ApiResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,6 +49,9 @@ public class UnifiedApiController {
     private final List<String> registeredMethods = new ArrayList<>();
 
     private final GetHomePageUrlForBJ getHomePageUrlForBJ;
+
+    @Value("${app.version:unknown}")
+    private String appVersion;
 
     /**
      * 初始化已注册的方法列表（应用启动时执行）
@@ -101,11 +105,8 @@ public class UnifiedApiController {
      */
     @GetMapping("/getVersion")
     public ApiResponse getVersion() {
-        // 创建并返回一个包含"Version 1.0"的成功响应对象
-        ApiResponse apiResponse = ApiResponse.success("Version 1.0");
-        // 记录接收到API版本请求的日志信息
-        logger.debug("获取心跳版本");
-        return apiResponse;
+        logger.debug("获取心跳版本: {}", appVersion);
+        return ApiResponse.success(appVersion);
     }
 
     /**

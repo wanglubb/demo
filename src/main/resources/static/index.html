@@ -4,7 +4,11 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>API 测试工具</title>
+	<title>Workbench · Personal</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/tokens.css">
 	<link rel="stylesheet" href="css/index.css">
 	<link rel="stylesheet" href="css/index_layout.css">
 	<link rel="stylesheet" href="css/index_map.css">
@@ -12,62 +16,76 @@
 
 <body>
 	<div class="app-layout">
-		<div class="sidebar">
-			<div class="logo">工具集</div>
+		<aside class="sidebar" aria-label="主导航">
+			<div class="logo">
+				<span class="logo__mark">WB</span>
+				<span class="logo__text">Workbench</span>
+			</div>
 			<nav>
-				<a href="javascript:void(0)" data-tab="tab-sample1" onclick="openTab('tab-sample1', this)">快捷功能</a>
-				<a href="javascript:void(0)" class="active" data-tab="tab-api" onclick="openTab('tab-api', this)">API
-					测试工具</a>
-				<a href="javascript:void(0)" data-tab="tab-sample2" onclick="openTab('tab-map', this)">数据地图</a>
-				<a href="javascript:void(0)" data-tab="tab-sample3" onclick="openTab('tab-sample3', this)">示例标签 3</a>
+				<a href="javascript:void(0)" data-tab="tab-sample1" onclick="openTab('tab-sample1', this)">
+					<span class="nav-idx">01</span>快捷功能
+				</a>
+				<a href="javascript:void(0)" class="active" data-tab="tab-api" onclick="openTab('tab-api', this)">
+					<span class="nav-idx">02</span>API 测试
+				</a>
+				<a href="javascript:void(0)" data-tab="tab-map" onclick="openTab('tab-map', this)">
+					<span class="nav-idx">03</span>数据地图
+				</a>
+				<a href="javascript:void(0)" data-tab="tab-articles" onclick="openTab('tab-articles', this)">
+					<span class="nav-idx">04</span>文章
+				</a>
 			</nav>
-		</div>
+			<div class="sidebar__meta">
+				<button type="button" class="cmdk-trigger" id="cmdk-open" aria-label="打开命令面板">
+					<span>跳转</span>
+					<kbd>⌘K</kbd>
+				</button>
+			</div>
+		</aside>
 
 		<div class="main">
-			<!-- 原有内容放入名为 tab-api 的面板，保持内部结构与事件不变 -->
 			<div id="tab-api" class="tab-content active">
 				<div class="container">
-					<div class="header">
-						<h1>🚀 API 测试工具</h1>
-						<p>简单后端接口测试界面</p>
-						<div style="margin-top: 15px;">
-							<span id="user-info" style="font-size: 0.9em; opacity: 0.9;"></span>
-
-							<button id="logout-btn" class="btn"
-								style="margin-left: 15px; padding: 8px 20px; font-size: 14px; display: none;"
-								onclick="logout()">登出</button>
+					<header class="panel-header">
+						<div>
+							<p class="eyebrow">API · CONSOLE</p>
+							<h1>接口工作台</h1>
+							<p class="lede">选择方法，编辑 JSON，查看原始响应。</p>
+						</div>
+						<div class="panel-header__actions">
+							<span id="user-info" class="user-chip"></span>
+							<button id="logout-btn" class="btn btn--ghost" style="display: none;" onclick="logout()">登出</button>
 							<span id="status-indicator" class="status-indicator">
 								<span class="status-dot"></span>
 								<span id="status-text">检测中...</span>
 							</span>
 						</div>
-					</div>
+					</header>
+
 					<div class="content">
-						<!-- 开放接口 -->
-						<div class="api-section">
+						<section class="api-section">
 							<div class="api-title">
 								<span class="method-badge post">POST</span>
 								开放接口调用
 							</div>
-							<p style="color: #475569; margin-bottom: 20px;">调用统一的开放接口，支持多种方法</p>
+							<p class="section-help">统一开放接口入口，支持多方法切换。</p>
 
 							<div class="form-group">
-								<label for="method-select">选择方法：</label>
+								<label for="method-select">选择方法</label>
 								<select id="method-select" class="form-control" onchange="updateMethodParams()">
-									<!-- 动态填充：初始占位 -->
 									<option value="loading">加载中...</option>
 								</select>
 							</div>
 
 							<div class="form-group">
-								<label for="method-input">方法名称：</label>
+								<label for="method-input">方法名称</label>
 								<input type="text" id="method-input" class="form-control" value="createOrder"
-									placeholder="输入API方法名">
+									placeholder="输入 API 方法名">
 							</div>
 
 							<div class="form-group">
-								<label for="params-input">请求参数 (JSON格式)：</label>
-								<textarea id="params-input" class="form-control" placeholder="输入JSON格式的参数">
+								<label for="params-input">请求参数 (JSON)</label>
+								<textarea id="params-input" class="form-control form-control--code" placeholder="输入 JSON 参数">
 {
   "method": "createOrder",
   "params": {
@@ -77,118 +95,99 @@
   }
 }</textarea>
 								<div class="example-params">
-									<strong>参数说明：</strong><br>
-									• method: 必填，API方法名<br>
-									• params: 可选，具体的业务参数<br>
-									• 其他自定义参数...
+									<strong>参数说明</strong><br>
+									• method: 必填，API 方法名<br>
+									• params: 可选，业务参数<br>
+									• 其他自定义字段…
 								</div>
 							</div>
 
-							<button class="btn" onclick="callOpenApi()">调用接口</button>
-							<button class="btn" onclick="clearResponse('open-response')"
-						style="background: #cbd5e1; border-color: #cbd5e1; color: #475569;">清空结果</button>
+							<div class="btn-row">
+								<button class="btn btn--primary" onclick="callOpenApi()">调用接口</button>
+								<button class="btn btn--ghost" onclick="clearResponse('open-response')">清空结果</button>
+							</div>
 							<div id="open-response" class="response-area" style="display: none;">
-								<div class="response-title">响应结果：
-									<button class="btn" style="padding: 5px 15px; font-size: 12px;"
-										onclick="copyToClipboard('open-content')">复制</button>
+								<div class="response-title">
+									响应结果
+									<button class="btn btn--ghost btn--sm" onclick="copyToClipboard('open-content')">复制</button>
 								</div>
 								<div id="open-content" class="response-content"></div>
 							</div>
-						</div>
+						</section>
 					</div>
 				</div>
 			</div>
 
-			<!-- 简单示例面板（占位，样式与主面板一致） -->
 			<div id="tab-sample1" class="tab-content">
 				<div class="container">
-					
-					<!-- 卡片式功能布局 -->
-					<div class="features-grid">			
-						
-						 <div class="feature-card" onclick="quickFunction('findOrder')">
-							<div class="card-icon">🔍</div>
-							<h3>代理IP获取</h3>
-							<p>查找可用代理IP</p>
-							<div class="card-footer">立即使用</div>
+					<header class="panel-header">
+						<div>
+							<p class="eyebrow">SHORTCUTS</p>
+							<h1>快捷功能</h1>
+							<p class="lede">高频动作，一键进入对应流程。</p>
 						</div>
-						
-						<!--<div class="feature-card" onclick="quickFunction('signInvoice')">
-							<div class="card-icon">✍️</div>
-							<h3>马来发票签名</h3>
-							<p>对发票JSON数据进行数字签名</p>
-							<div class="card-footer">立即使用</div>
-						</div> -->
-						
-						<div class="feature-card" onclick="quickFunction('checkTax')">
-							<div class="card-icon">📋</div>
+					</header>
+					<div class="features-grid">
+						<button type="button" class="feature-card" onclick="quickFunction('findOrder')">
+							<span class="card-kicker">NET</span>
+							<h3>代理 IP 获取</h3>
+							<p>查找可用代理 IP</p>
+							<span class="card-footer">立即使用 →</span>
+						</button>
+						<button type="button" class="feature-card" onclick="quickFunction('checkTax')">
+							<span class="card-kicker">TAX</span>
 							<h3>纳税人状态查询</h3>
 							<p>验证企业状态</p>
-							<div class="card-footer">立即使用</div>
-						</div>
-						
-			<!-- 			<div class="feature-card" onclick="quickFunction('generateCert')">
-							<div class="card-icon">🔐</div>
-							<h3>证书生成</h3>
-							<p>生成加密所需的数字证书</p>
-							<div class="card-footer">立即使用</div>
-						</div> -->
-						
-						<div class="feature-card" onclick="quickFunction('getHomeUrl')">
-							<div class="card-icon">🏠</div>
+							<span class="card-footer">立即使用 →</span>
+						</button>
+						<button type="button" class="feature-card" onclick="quickFunction('getHomeUrl')">
+							<span class="card-kicker">BJ</span>
 							<h3>北京工商网</h3>
-							<p>免登录跳转到北京工商注册网</p>
-							<div class="card-footer">立即跳转</div>
-						</div>
-						<!--核名-->
-						<div class="feature-card" onclick="quickFunction('checkName')">
-							<div class="card-icon">📝</div>
-							<h3>企业核名-北京</h3>
+							<p>免登录跳转注册入口</p>
+							<span class="card-footer">立即跳转 →</span>
+						</button>
+						<button type="button" class="feature-card" onclick="quickFunction('checkName')">
+							<span class="card-kicker">NAME</span>
+							<h3>企业核名 · 北京</h3>
 							<p>查询企业名称是否可用</p>
-							<div class="card-footer">立即使用</div>
-						</div>
-						<!--获取验证码-->
+							<span class="card-footer">立即使用 →</span>
+						</button>
 					</div>
 				</div>
 			</div>
 
 			<div id="tab-map" class="tab-content">
 				<div class="container">
+					<header class="panel-header">
+						<div>
+							<p class="eyebrow">GEO</p>
+							<h1>数据地图</h1>
+							<p class="lede">双击省份可编辑；悬停查看详情。</p>
+						</div>
+					</header>
 					<div class="map-title">中国省份数据分布图</div>
 					<div class="map-tips">双击省份可编辑数据，鼠标悬停查看详情</div>
-					
+
 					<div class="map-container" id="mapContainer">
-						<!-- ECharts地图将在JS中生成 -->
 						<div id="chinaMap" style="width: 100%; height: 100%;"></div>
-						
-						<!-- 数据导入控件 -->
+
 						<div class="data-import-section">
 							<div class="import-title">数据导入</div>
 							<div class="import-controls">
 								<div class="file-input-wrapper">
-									<div class="file-input-button">选择CSV文件</div>
+									<div class="file-input-button">选择 CSV 文件</div>
 									<input type="file" id="csvFileInput" accept=".csv" />
 								</div>
-								
 								<button class="import-btn" id="importBtn">导入数据</button>
 							</div>
-							
-							<div class="import-info" id="importInfo" style="margin-top: 10px; font-size: 12px; color: #64748b;"></div>
+							<div class="import-info" id="importInfo"></div>
 						</div>
-						
-						<!-- 导出按钮 -->
+
 						<button class="export-btn" id="exportBtn">导出地图</button>
-						
-						<!-- 详细信息提示框 -->
 						<div class="tooltip" id="tooltip"></div>
-						
-						
 					</div>
-					
-					<!-- 编辑弹窗遮罩 -->
+
 					<div class="modal-overlay" id="editModalOverlay"></div>
-					
-					<!-- 编辑弹窗 -->
 					<div class="edit-modal" id="editModal">
 						<div class="edit-form">
 							<div class="form-row">
@@ -203,7 +202,6 @@
 								<label for="actualUsers">使用户数</label>
 								<input type="number" id="actualUsers" />
 							</div>
-							
 							<div class="modal-buttons">
 								<button class="modal-btn cancel-btn" id="cancelEditBtn">取消</button>
 								<button class="modal-btn save-btn" id="saveEditBtn">保存</button>
@@ -213,44 +211,84 @@
 				</div>
 			</div>
 
-			
+			<div id="tab-articles" class="tab-content">
+				<div class="container">
+					<header class="panel-header">
+						<div>
+							<p class="eyebrow">NOTES</p>
+							<h1>文章</h1>
+							<p class="lede">个人笔记与长文入口。内容可后续接入真实数据源。</p>
+						</div>
+					</header>
+					<div class="article-list">
+						<article class="article-row">
+							<div>
+								<p class="article-meta">DRAFT · 本地</p>
+								<h3>工作台设计备忘</h3>
+								<p>记录本站信息架构：登录、接口、地图与笔记四块能力如何共用同一套视觉语言。</p>
+							</div>
+							<span class="article-cta">阅读 →</span>
+						</article>
+						<article class="article-row">
+							<div>
+								<p class="article-meta">IDEA</p>
+								<h3>接口调试清单</h3>
+								<p>待整理：常用 method、示例 params、失败码对照表。</p>
+							</div>
+							<span class="article-cta">阅读 →</span>
+						</article>
+						<article class="article-row article-row--empty">
+							<div>
+								<p class="article-meta">EMPTY</p>
+								<h3>更多文章待写入</h3>
+								<p>此处预留给真实文章列表；未接入前不展示虚构数据。</p>
+							</div>
+						</article>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
-	<!-- 企业状态查询模态框 -->
+	<div id="cmdk" class="cmdk" hidden>
+		<div class="cmdk__backdrop" data-cmdk-close></div>
+		<div class="cmdk__dialog" role="dialog" aria-modal="true" aria-label="命令面板">
+			<input type="search" id="cmdk-input" class="cmdk__input" placeholder="跳转到模块…" autocomplete="off">
+			<ul class="cmdk__list" id="cmdk-list"></ul>
+			<p class="cmdk__hint">↑↓ 选择 · Enter 确认 · Esc 关闭</p>
+		</div>
+	</div>
+
 	<div id="tax-query-modal" class="modal-overlay">
 		<div class="modal-content tax-query-modal">
 			<div class="modal-header">
 				<h3>企业状态查询</h3>
-				<button id="close-tax-modal" class="modal-close-btn">&times;</button>
+				<button id="close-tax-modal" class="modal-close-btn" type="button">&times;</button>
 			</div>
 			<div class="modal-body">
 				<form id="tax-query-form">
 					<div class="form-group">
-						<label for="ent-name">企业名称:</label>
+						<label for="ent-name">企业名称</label>
 						<input type="text" id="ent-name" class="form-control" placeholder="请输入企业全称" required />
 					</div>
-					
 					<div class="form-group">
-						<label for="tax-number">纳税人识别号:</label>
+						<label for="tax-number">纳税人识别号</label>
 						<input type="text" id="tax-number" class="form-control" placeholder="请输入纳税人识别号" required />
 					</div>
-					
 					<div class="form-actions">
-						<button type="button" class="btn cancel-btn" id="cancel-tax-query">取消</button>
-						<button type="button" id="submit-tax-query" class="btn submit-btn">查询</button>
+						<button type="button" class="btn btn--ghost cancel-btn" id="cancel-tax-query">取消</button>
+						<button type="button" id="submit-tax-query" class="btn btn--primary submit-btn">查询</button>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
 
-	<!-- 企业状态查询结果模态框 -->
 	<div id="tax-result-modal" class="modal-overlay">
 		<div class="modal-content tax-result-modal">
 			<div class="modal-header">
 				<h3>企业状态查询结果</h3>
-				<button id="close-result-modal" class="modal-close-btn">&times;</button>
+				<button id="close-result-modal" class="modal-close-btn" type="button">&times;</button>
 			</div>
 			<div class="modal-body">
 				<div id="tax-result-content">
@@ -276,64 +314,55 @@
 					</table>
 				</div>
 				<div class="form-actions">
-					<button type="button" class="btn primary-btn" id="close-result-and-back">关闭</button>
+					<button type="button" class="btn btn--primary primary-btn" id="close-result-and-back">关闭</button>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<!-- 企业核名模态框 -->
 	<div id="check-name-modal" class="modal-overlay">
 		<div class="modal-content check-name-modal">
 			<div class="modal-header">
-				<h3>企业核名 - 北京</h3>
-				<button id="close-check-name-modal" class="modal-close-btn">&times;</button>
+				<h3>企业核名 · 北京</h3>
+				<button id="close-check-name-modal" class="modal-close-btn" type="button">&times;</button>
 			</div>
 			<div class="modal-body">
 				<form id="check-name-form">
 					<div class="form-group">
-						<label for="areaname">地区:</label>
+						<label for="areaname">地区</label>
 						<input type="text" id="areaname" class="form-control" placeholder="请输入地区" required />
 					</div>
-					
 					<div class="form-group">
-						<label for="enttra">企业简称:</label>
+						<label for="enttra">企业简称</label>
 						<input type="text" id="enttra" class="form-control" placeholder="请输入企业简称" required />
 					</div>
-					
 					<div class="form-group">
-						<label for="traind">行业特点:</label>
+						<label for="traind">行业特点</label>
 						<input type="text" id="traind" class="form-control" placeholder="请输入行业特点" required />
 					</div>
-					
 					<div class="form-group">
-						<label for="dmvalue">行业代码:</label>
+						<label for="dmvalue">行业代码</label>
 						<input type="text" id="dmvalue" class="form-control" placeholder="请输入行业代码" required />
 					</div>
-					
 					<div class="form-group">
-						<label for="entname">企业名称:</label>
+						<label for="entname">企业名称</label>
 						<input type="text" id="entname" class="form-control" placeholder="请输入完整企业名称" required />
 					</div>
-					
 					<div class="form-actions">
-						<button type="button" class="btn cancel-btn" id="cancel-check-name">取消</button>
-						<button type="button" id="submit-check-name" class="btn submit-btn">检查</button>
+						<button type="button" class="btn btn--ghost cancel-btn" id="cancel-check-name">取消</button>
+						<button type="button" id="submit-check-name" class="btn btn--primary submit-btn">检查</button>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
 
-	<!-- 引入ECharts库 - 使用本地文件 -->
 	<script src="js/echarts.min.js"></script>
-	
-	
-	<!-- 保持原有脚本引用顺序 -->
-	<script src="js/index.js"></script><!-- 主页脚本 -->
-	<script src="js/heartbeat.js"></script> <!-- 心跳检测 -->
-	<script src="js/httpMethod.js"></script><!-- HTTP请求方法 -->
-	<script src="js/map.js"></script> <!-- 地图功能 -->
+	<script src="js/index.js"></script>
+	<script src="js/ui.js"></script>
+	<script src="js/heartbeat.js"></script>
+	<script src="js/httpMethod.js"></script>
+	<script src="js/map.js"></script>
 </body>
 
 </html>

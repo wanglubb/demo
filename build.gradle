@@ -8,7 +8,7 @@ plugins {
 }
 
 group = 'com.tools'
-version = '0.0.4-SNAPSHOT'
+version = '0.0.8-SNAPSHOT'
 
 java {
 	toolchain {
@@ -22,6 +22,25 @@ configurations {
 	}
 	all {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+}
+
+processResources {
+    // Windows 默认 GBK；不指定 UTF-8 时 filter 会把中文 HTML 弄成乱码
+    filteringCharset = 'UTF-8'
+    filesMatching('**/login.html') {
+        // 拼接 token，避免 Groovy/Gradle 把 '${version}' 解析成空串后 replace 毁掉全文
+        def versionToken = '$' + '{version}'
+        def versionValue = project.version.toString()
+        filter { String line ->
+            line.replace(versionToken, versionValue)
+        }
+    }
+    // 打包/Gradle 构建时用 project.version 覆盖，避免与 build.gradle 不一致
+    filesMatching('**/application.properties') {
+        filter { String line ->
+            line.startsWith('app.version=') ? "app.version=${project.version}" : line
+        }
     }
 }
 

@@ -4,43 +4,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>用户登录 - API 测试工具</title>
+    <title>登录 · Personal Workbench</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/tokens.css">
     <link rel="stylesheet" href="css/login.css">
 </head>
 
 <body>
-    <div class="login-container">
-        <div class="login-header">
-            <h1>🔐 用户登录</h1>
-            <p>请输入您的账号和密码</p>
-        </div>
+    <main class="login-shell">
+        <section class="login-brand" aria-hidden="true">
+            <p class="eyebrow">PERSONAL · WORKBENCH</p>
+            <h1 class="brand-title">选山攀崖！<br>量力而为！</h1>
+            <p class="brand-lede">Done is better than perfect.</p>
+            <div class="code-card">
+                <div class="code-card__bar">
+                    <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                    <span class="code-card__name">session.http</span>
+                </div>
+                <pre class="code-card__body"><code><span class="tok-method">POST</span> <span class="tok-path">/auth/login</span>
+<span class="tok-key">Authorization</span>: <span class="tok-str">Bearer ·····</span>
+<span class="tok-punct">{</span>
+  <span class="tok-key">"status"</span>: <span class="tok-str">"ready"</span>
+<span class="tok-punct">}</span>
+<span class="status-chip">200 OK</span></code></pre>
+            </div>
+        </section>
 
-        <div class="login-form">
-            <div id="error-message" class="error-message"></div>
-            <div id="success-message" class="success-message"></div>
+        <section class="login-panel">
+            <header class="login-panel__head">
+                <p class="eyebrow">ACCESS</p>
+                <h2>进入工作台</h2>
+                <p class="sub">使用本地账号继续。会话保存在浏览器 Cookie。</p>
+            </header>
 
-            <form id="loginForm">
+            <div id="error-message" class="msg msg--error" role="alert"></div>
+            <div id="success-message" class="msg msg--ok" role="status"></div>
+
+            <form id="loginForm" class="login-form" novalidate>
                 <div class="form-group">
-                    <label for="username">用户名：</label>
-                    <input type="text" id="username" name="username" class="form-control" placeholder="请输入用户名" required
-                        autocomplete="username">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" class="form-control" placeholder="demo"
+                        required autocomplete="username">
                 </div>
 
                 <div class="form-group">
-                    <label for="password">密码：</label>
-                    <input type="password" id="password" name="password" class="form-control" placeholder="请输入密码"
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="••••••••"
                         required autocomplete="current-password">
                 </div>
 
-                <button type="submit" id="loginBtn" class="login-btn">
-                    登录
+                <button type="submit" id="loginBtn" class="btn btn--primary">
+                    登录并打开工作台
                 </button>
+                <div class="version-info" id="versionInfo">版本号: v${version}</div>
             </form>
-        </div>
-        <div class="footer">
-            <p>power by © 2026</p>
-        </div>
-    </div>
+
+            <footer class="login-foot">
+                <span>Personal site</span>
+                <span aria-hidden="true">·</span>
+                <span>power by © 2026</span>
+            </footer>
+        </section>
+    </main>
     <script src="js/login.js"></script>
 </body>
 

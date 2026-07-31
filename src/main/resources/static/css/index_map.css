@@ -1,64 +1,57 @@
-/* 地图容器样式 */
+/* Map panel — Cobalt surfaces (scoped to avoid modal collisions) */
+
+.map-title {
+    font-family: var(--font-display);
+    font-style: normal;
+    font-weight: 600;
+    font-size: var(--text-xl);
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    margin: 0 0 var(--space-xs);
+}
+
+.map-tips {
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    margin: 0 0 var(--space-lg);
+}
+
 .map-container {
     width: 100%;
-    height: calc(100vh - 120px);
+    height: calc(100vh - 220px);
+    min-height: 420px;
     position: relative;
     overflow: hidden;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.22) 100%);
-    backdrop-filter: blur(18px) saturate(150%);
-    -webkit-backdrop-filter: blur(18px) saturate(150%);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    background-clip: padding-box;
-    box-shadow: 0 10px 26px rgba(56, 130, 246, 0.08);
+    background: var(--color-paper-2);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-rule);
 }
 
-/* 地图标题样式 */
-.map-title {
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #1e293b;
-}
-
-/* 地图提示信息 */
-.map-tips {
-    text-align: center;
-    font-size: 14px;
-    color: #64748b;
-    margin-bottom: 20px;
-}
-
-
-/* 数据导入区域 */
 .data-import-section {
     position: absolute;
-    top: 20px;
-    left: 20px;
-    z-index: 1000;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.48) 0%, rgba(255, 255, 255, 0.34) 100%);
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.30);
-    background-clip: padding-box;
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0 10px 28px rgba(56, 130, 246, 0.10);
-    min-width: 250px;
-    color: #1e293b;
+    top: 16px;
+    left: 16px;
+    z-index: 20;
+    background: var(--color-paper);
+    border: 1px solid var(--color-rule-strong);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    min-width: 240px;
+    color: var(--color-ink);
+    box-shadow: var(--shadow-lift);
 }
 
 .import-title {
-    font-weight: bold;
+    font-family: var(--font-display);
+    font-weight: 600;
     margin-bottom: 10px;
-    font-size: 15px;
-    color: #1e293b;
+    font-size: var(--text-sm);
 }
 
 .import-controls {
     display: flex;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
     align-items: center;
 }
 
@@ -68,140 +61,136 @@
     display: inline-block;
 }
 
-.file-input-wrapper input[type=file] {
+.file-input-wrapper input[type="file"] {
     position: absolute;
-    left: 0;
-    top: 0;
+    inset: 0;
     opacity: 0;
     cursor: pointer;
-    width: 100%;
-    height: 100%;
 }
 
 .file-input-button {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.92) 0%, rgba(14, 165, 233, 0.86) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    color: white;
-    padding: 8px 14px;
-    border-radius: 10px;
+    background: var(--color-accent);
+    border: 1px solid transparent;
+    color: var(--color-on-dark);
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    font-size: 13px;
-    transition: all 0.2s ease;
-    box-shadow: 0 8px 18px rgba(59, 130, 246, 0.20);
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 600;
 }
 
 .file-input-button:hover {
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(2, 132, 199, 0.88) 100%);
+    filter: brightness(1.05);
 }
 
-.import-btn {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.92) 0%, rgba(5, 150, 105, 0.84) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    color: white;
-    padding: 8px 14px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 13px;
-    transition: all 0.2s ease;
-    box-shadow: 0 8px 18px rgba(16, 185, 129, 0.18);
+.map-container .import-btn {
+    background: var(--color-ink);
+    color: var(--color-on-dark);
+    border: 1px solid transparent;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
 }
 
-.import-btn:hover {
-    background: linear-gradient(135deg, rgba(5, 150, 105, 0.95) 0%, rgba(4, 120, 87, 0.88) 100%);
+.map-container .import-btn:hover {
+    background: var(--color-ink-2);
 }
 
-/* 地图导出按钮 */
-.export-btn {
+.import-info {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+}
+
+.map-container .export-btn {
     position: absolute;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.92) 0%, rgba(244, 114, 182, 0.84) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    color: white;
-    padding: 10px 18px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 14px;
-    box-shadow: 0 10px 22px rgba(239, 68, 68, 0.18);
-    transition: all 0.2s ease;
-}
-
-.export-btn:hover {
-    background: linear-gradient(135deg, rgba(220, 38, 38, 0.95) 0%, rgba(236, 72, 153, 0.88) 100%);
-}
-
-
-/* 详细信息弹窗 */
-.tooltip {
-    position: absolute;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(255, 255, 255, 0.62) 100%);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.26);
-    background-clip: padding-box;
-    color: #1e293b;
+    bottom: 16px;
+    right: 16px;
+    z-index: 20;
+    background: var(--color-graphite);
+    border: 1px solid oklch(40% 0.02 260);
+    color: var(--color-on-dark);
     padding: 10px 14px;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+}
+
+.map-container .export-btn:hover {
+    border-color: var(--color-accent);
+}
+
+.map-container .tooltip {
+    position: absolute;
+    background: var(--color-paper);
+    border: 1px solid var(--color-rule-strong);
+    color: var(--color-ink);
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
     pointer-events: none;
-    z-index: 1001;
-    font-size: 14px;
+    z-index: 25;
+    font-size: 13px;
     max-width: 250px;
     word-wrap: break-word;
     display: none;
-    box-shadow: 0 8px 22px rgba(56, 130, 246, 0.12);
+    box-shadow: var(--shadow-lift);
 }
 
-/* 省份编辑弹窗 */
-.edit-modal {
+.map-container .edit-modal {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: linear-gradient(135deg, rgba(240, 249, 255, 0.78) 0%, rgba(226, 242, 255, 0.64) 100%);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(186, 230, 253, 0.28);
-    background-clip: padding-box;
-    padding: 24px;
-    border-radius: 16px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-    z-index: 1002;
+    background: var(--color-paper);
+    border: 1px solid var(--color-rule-strong);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lift);
+    z-index: 30;
     display: none;
-    min-width: 300px;
-    color: #1e293b;
-    animation: modalIn 0.22s ease-out;
+    min-width: min(320px, 90%);
+    color: var(--color-ink);
 }
 
-@keyframes modalIn {
-    from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); }
-    to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-}
-
-.edit-modal.active {
+.map-container .edit-modal.active {
     display: block;
+    animation: map-modal-in var(--dur-short) var(--ease-out);
 }
 
-.modal-overlay {
+@keyframes map-modal-in {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+#editModalOverlay.modal-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(3px);
-    z-index: 1001;
+    inset: 0;
+    width: auto;
+    height: auto;
+    background: oklch(24% 0.02 258 / 0.35);
+    backdrop-filter: none;
+    z-index: 28;
     display: none;
+    align-items: stretch;
+    justify-content: stretch;
+    padding: 0;
 }
 
-.modal-overlay.active {
+#editModalOverlay.modal-overlay.active {
     display: block;
 }
 
 .edit-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
 }
 
 .form-row {
@@ -211,92 +200,57 @@
 }
 
 .form-row label {
-    font-weight: bold;
-    font-size: 13px;
-    color: #475569;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    font-weight: 500;
 }
 
 .form-row input {
     padding: 10px 12px;
-    border: 1px solid rgba(148, 163, 184, 0.28);
-    border-radius: 12px;
+    border: 1px solid var(--color-rule-strong);
+    border-radius: var(--radius-sm);
     font-size: 14px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.74) 0%, rgba(255, 255, 255, 0.58) 100%);
-    backdrop-filter: blur(10px) saturate(140%);
-    -webkit-backdrop-filter: blur(10px) saturate(140%);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
-    color: #1e293b;
-    transition: all 0.2s ease;
+    background: var(--color-paper);
+    color: var(--color-ink);
 }
 
 .form-row input:focus {
     outline: none;
-    border-color: rgba(59, 130, 246, 0.42);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(239, 246, 255, 0.74) 100%);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12), 0 8px 20px rgba(59, 130, 246, 0.08);
+    border-color: var(--color-accent);
+}
+
+.form-row input:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
 }
 
 .form-row input[readonly] {
-    background: rgba(226, 232, 240, 0.5);
-    color: #64748b;
+    background: var(--color-paper-2);
+    color: var(--color-muted);
 }
 
 .modal-buttons {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     justify-content: flex-end;
-    margin-top: 10px;
+    margin-top: 8px;
 }
 
-.modal-btn {
-    padding: 9px 18px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 0.2s ease;
-    box-shadow: 0 8px 18px rgba(56, 130, 246, 0.10);
-}
+@media (max-width: 768px) {
+    .map-container {
+        height: 60vh;
+        min-height: 360px;
+    }
 
-.save-btn {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.92) 0%, rgba(5, 150, 105, 0.84) 100%);
-    border-color: rgba(255, 255, 255, 0.18);
-    color: white;
-}
-
-.save-btn:hover {
-    background: linear-gradient(135deg, rgba(5, 150, 105, 0.95) 0%, rgba(4, 120, 87, 0.88) 100%);
-}
-
-.cancel-btn {
-    background: linear-gradient(135deg, rgba(226, 232, 240, 0.88) 0%, rgba(203, 213, 225, 0.76) 100%);
-    border-color: rgba(148, 163, 184, 0.24);
-    color: #475569;
-}
-
-.cancel-btn:hover {
-    background: linear-gradient(135deg, rgba(241, 245, 249, 0.94) 0%, rgba(226, 232, 240, 0.82) 100%);
-}
-
-
-.legend-title {
-    font-weight: bold;
-    margin-bottom: 8px;
-    font-size: 14px;
-    color: #1e293b;
-}
-
-.legend-scale {
-    display: flex;
-    align-items: center;
-}
-
-.legend-labels {
-    display: flex;
-    width: 200px;
-    justify-content: space-between;
-    font-size: 12px;
-    margin-top: 5px;
-    color: #64748b;
+    .data-import-section {
+        position: relative;
+        top: auto;
+        left: auto;
+        margin: var(--space-md);
+        min-width: 0;
+        width: calc(100% - 32px);
+    }
 }
