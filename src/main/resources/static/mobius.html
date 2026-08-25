@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-theme="ink">
+<html lang="zh-CN" data-theme="paper">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Möbius · 单面曲面图版</title>
+    <title>登录 · Möbius</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@300;400;500&display=swap"
@@ -22,19 +22,57 @@
         </div>
 
         <header class="plate__head">
-            <p class="micro">PLATE 01 &nbsp;/&nbsp; ORIENTABILITY &nbsp;/&nbsp; WIREFRAME</p>
-            <button type="button" id="invert-btn" class="invert" aria-pressed="false">
+            <p class="micro">PLATE 01 &nbsp;/&nbsp; ORIENTABILITY &nbsp;/&nbsp; ACCESS</p>
+            <button type="button" id="invert-btn" class="invert" aria-pressed="true">
                 <span class="invert__swatch"></span>反相
             </button>
         </header>
 
-        <section class="stage">
-            <div class="stage__label stage__label--left" aria-hidden="true">ONE EDGE</div>
-            <div class="stage__label stage__label--right" aria-hidden="true">ONE SURFACE</div>
-            <canvas id="mobius-canvas" role="img"
-                aria-label="旋转的莫比乌斯环线框图，由边界线、中线与横向母线构成"></canvas>
-            <p class="stage__hint">拖拽可转动 · 横向改变自转 · 纵向改变俯角</p>
-        </section>
+        <div class="plate__body">
+            <section class="stage">
+                <div class="stage__label stage__label--left" aria-hidden="true">ONE EDGE</div>
+                <div class="stage__label stage__label--right" aria-hidden="true">ONE SURFACE</div>
+                <canvas id="mobius-canvas" role="img"
+                    aria-label="旋转的莫比乌斯环线框图，由边界线、中线与横向母线构成"></canvas>
+                <p class="stage__hint">拖拽可转动 · 横向改变自转 · 纵向改变俯角</p>
+            </section>
+
+            <section class="login-dock" aria-labelledby="login-title">
+                <header class="login-dock__head">
+                    <p class="micro">ACCESS</p>
+                    <h2 id="login-title">登录工作台</h2>
+                    <p class="login-dock__sub">使用本地账号继续。会话保存在浏览器 Cookie。</p>
+                </header>
+
+                <div id="error-message" class="msg msg--error" role="alert"></div>
+                <div id="success-message" class="msg msg--ok" role="status"></div>
+
+                <form id="loginForm" class="login-form" novalidate>
+                    <div class="form-group">
+                        <label for="username">用户名</label>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="demo"
+                            required autocomplete="username">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">密码</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="••••••••"
+                            required autocomplete="current-password">
+                    </div>
+
+                    <button type="submit" id="loginBtn" class="login-submit">
+                        登录
+                    </button>
+                    <div class="version-info" id="versionInfo">版本号: v${version}</div>
+                </form>
+
+                <footer class="login-dock__foot">
+                    <span>Personal site</span>
+                    <span aria-hidden="true">·</span>
+                    <span>power by © 2026</span>
+                </footer>
+            </section>
+        </div>
 
         <div class="titleblock">
             <div class="titleblock__cell titleblock__cell--wide">
@@ -63,6 +101,7 @@
 
     <div class="grain" aria-hidden="true"></div>
     <script src="js/mobius.js"></script>
+    <script src="js/login.js"></script>
 </body>
 
 </html>

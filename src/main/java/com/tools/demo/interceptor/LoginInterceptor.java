@@ -44,7 +44,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         // 普通页面请求，重定向到登录页面
         logger.info("用户未登录，重定向到登录页面");
-        response.sendRedirect("/login.html");
+        response.sendRedirect("/mobius.html");
         return false;
     }
 

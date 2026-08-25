@@ -285,7 +285,7 @@
                         const data = await response.json();
                         if (data.code === 200) {
                             alert('登出成功');
-                            window.location.href = '/login.html';
+                            window.location.href = '/mobius.html';
                         } else {
                             alert('登出失败: ' + data.message);
                         }
@@ -406,11 +406,11 @@
                             fetchMethods();
                         } else {
                             // 未登录，重定向到登录页面
-                            window.location.href = '/login.html';
+                            window.location.href = '/mobius.html';
                         }
                     } catch (error) {
                         console.error('检查登录状态失败:', error);
-                        window.location.href = '/login.html';
+                        window.location.href = '/mobius.html';
                     }
                 }
 

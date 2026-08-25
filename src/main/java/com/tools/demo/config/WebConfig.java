@@ -55,7 +55,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/", "/index.html", "/router/**") // 拦截首页和API路由
                 .excludePathPatterns(
                         "/auth/**", // 排除认证相关接口
-                        "/login.html", // 排除登录页面
+                        "/login.html", // 排除旧登录页（会跳转到 Möbius）
+                        "/mobius.html", // 排除当前登录页
                         "/css/**", // 排除CSS文件
                         "/js/**", // 排除JS文件
                         "/images/**", // 排除图片文件
