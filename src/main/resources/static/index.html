@@ -22,16 +22,16 @@
 				<span class="logo__text">Workbench</span>
 			</div>
 			<nav>
-				<a href="javascript:void(0)" data-tab="tab-sample1" onclick="openTab('tab-sample1', this)">
+				<a href="#tab-sample1" data-tab="tab-sample1">
 					<span class="nav-idx">01</span>快捷功能
 				</a>
-				<a href="javascript:void(0)" class="active" data-tab="tab-api" onclick="openTab('tab-api', this)">
+				<a href="#tab-api" class="active" data-tab="tab-api">
 					<span class="nav-idx">02</span>API 测试
 				</a>
-				<a href="javascript:void(0)" data-tab="tab-map" onclick="openTab('tab-map', this)">
+				<a href="#tab-map" data-tab="tab-map">
 					<span class="nav-idx">03</span>数据地图
 				</a>
-				<a href="javascript:void(0)" data-tab="tab-articles" onclick="openTab('tab-articles', this)">
+				<a href="#tab-articles" data-tab="tab-articles">
 					<span class="nav-idx">04</span>文章
 				</a>
 			</nav>
@@ -54,7 +54,8 @@
 						</div>
 						<div class="panel-header__actions">
 							<span id="user-info" class="user-chip"></span>
-							<button id="logout-btn" class="btn btn--ghost" style="display: none;" onclick="logout()">登出</button>
+							<button id="logout-btn" class="btn btn--ghost" style="display: none;"
+								data-action="logout">登出</button>
 							<span id="status-indicator" class="status-indicator">
 								<span class="status-dot"></span>
 								<span id="status-text">检测中...</span>
@@ -72,7 +73,7 @@
 
 							<div class="form-group">
 								<label for="method-select">选择方法</label>
-								<select id="method-select" class="form-control" onchange="updateMethodParams()">
+								<select id="method-select" class="form-control">
 									<option value="loading">加载中...</option>
 								</select>
 							</div>
@@ -103,13 +104,15 @@
 							</div>
 
 							<div class="btn-row">
-								<button class="btn btn--primary" onclick="callOpenApi()">调用接口</button>
-								<button class="btn btn--ghost" onclick="clearResponse('open-response')">清空结果</button>
+								<button class="btn btn--primary" data-action="call-open-api">调用接口</button>
+								<button class="btn btn--ghost" data-action="clear-response"
+									data-target="open-response">清空结果</button>
 							</div>
 							<div id="open-response" class="response-area" style="display: none;">
 								<div class="response-title">
 									响应结果
-									<button class="btn btn--ghost btn--sm" onclick="copyToClipboard('open-content')">复制</button>
+									<button class="btn btn--ghost btn--sm" data-action="copy"
+										data-target="open-content">复制</button>
 								</div>
 								<div id="open-content" class="response-content"></div>
 							</div>
@@ -128,25 +131,25 @@
 						</div>
 					</header>
 					<div class="features-grid">
-						<button type="button" class="feature-card" onclick="quickFunction('findOrder')">
+						<button type="button" class="feature-card" data-quick="findOrder">
 							<span class="card-kicker">NET</span>
 							<h3>代理 IP 获取</h3>
 							<p>查找可用代理 IP</p>
 							<span class="card-footer">立即使用 →</span>
 						</button>
-						<button type="button" class="feature-card" onclick="quickFunction('checkTax')">
+						<button type="button" class="feature-card" data-quick="checkTax">
 							<span class="card-kicker">TAX</span>
 							<h3>纳税人状态查询</h3>
 							<p>验证企业状态</p>
 							<span class="card-footer">立即使用 →</span>
 						</button>
-						<button type="button" class="feature-card" onclick="quickFunction('getHomeUrl')">
+						<button type="button" class="feature-card" data-quick="getHomeUrl">
 							<span class="card-kicker">BJ</span>
 							<h3>北京工商网</h3>
 							<p>免登录跳转注册入口</p>
 							<span class="card-footer">立即跳转 →</span>
 						</button>
-						<button type="button" class="feature-card" onclick="quickFunction('checkName')">
+						<button type="button" class="feature-card" data-quick="checkName">
 							<span class="card-kicker">NAME</span>
 							<h3>企业核名 · 北京</h3>
 							<p>查询企业名称是否可用</p>
@@ -263,7 +266,7 @@
 		<div class="modal-content tax-query-modal">
 			<div class="modal-header">
 				<h3>企业状态查询</h3>
-				<button id="close-tax-modal" class="modal-close-btn" type="button">&times;</button>
+				<button id="close-tax-modal" class="modal-close-btn" type="button" data-modal-close>&times;</button>
 			</div>
 			<div class="modal-body">
 				<form id="tax-query-form">
@@ -276,7 +279,8 @@
 						<input type="text" id="tax-number" class="form-control" placeholder="请输入纳税人识别号" required />
 					</div>
 					<div class="form-actions">
-						<button type="button" class="btn btn--ghost cancel-btn" id="cancel-tax-query">取消</button>
+						<button type="button" class="btn btn--ghost cancel-btn" id="cancel-tax-query"
+							data-modal-close>取消</button>
 						<button type="button" id="submit-tax-query" class="btn btn--primary submit-btn">查询</button>
 					</div>
 				</form>
@@ -288,7 +292,7 @@
 		<div class="modal-content tax-result-modal">
 			<div class="modal-header">
 				<h3>企业状态查询结果</h3>
-				<button id="close-result-modal" class="modal-close-btn" type="button">&times;</button>
+				<button id="close-result-modal" class="modal-close-btn" type="button" data-modal-close>&times;</button>
 			</div>
 			<div class="modal-body">
 				<div id="tax-result-content">
@@ -314,7 +318,8 @@
 					</table>
 				</div>
 				<div class="form-actions">
-					<button type="button" class="btn btn--primary primary-btn" id="close-result-and-back">关闭</button>
+					<button type="button" class="btn btn--primary primary-btn" id="close-result-and-back"
+						data-modal-close>关闭</button>
 				</div>
 			</div>
 		</div>
@@ -324,7 +329,8 @@
 		<div class="modal-content check-name-modal">
 			<div class="modal-header">
 				<h3>企业核名 · 北京</h3>
-				<button id="close-check-name-modal" class="modal-close-btn" type="button">&times;</button>
+				<button id="close-check-name-modal" class="modal-close-btn" type="button"
+					data-modal-close>&times;</button>
 			</div>
 			<div class="modal-body">
 				<form id="check-name-form">
@@ -349,10 +355,28 @@
 						<input type="text" id="entname" class="form-control" placeholder="请输入完整企业名称" required />
 					</div>
 					<div class="form-actions">
-						<button type="button" class="btn btn--ghost cancel-btn" id="cancel-check-name">取消</button>
+						<button type="button" class="btn btn--ghost cancel-btn" id="cancel-check-name"
+							data-modal-close>取消</button>
 						<button type="button" id="submit-check-name" class="btn btn--primary submit-btn">检查</button>
 					</div>
 				</form>
+			</div>
+		</div>
+	</div>
+
+	<div id="check-name-result-modal" class="modal-overlay">
+		<div class="modal-content check-name-result-modal">
+			<div class="modal-header">
+				<h3>企业核名结果</h3>
+				<button id="close-check-name-result-modal" class="modal-close-btn" type="button"
+					data-modal-close>&times;</button>
+			</div>
+			<div class="modal-body">
+				<p id="check-name-result-message" class="result-message"></p>
+				<div class="form-actions">
+					<button type="button" class="btn btn--primary primary-btn" id="close-check-name-and-back"
+						data-modal-close>关闭</button>
+				</div>
 			</div>
 		</div>
 	</div>

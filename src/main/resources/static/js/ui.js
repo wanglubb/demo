@@ -23,13 +23,21 @@
 
     function renderList() {
         if (!cmdkList) return;
-        cmdkList.innerHTML = '';
+        cmdkList.textContent = '';
         filtered.forEach(function (cmd, i) {
             const li = document.createElement('li');
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.setAttribute('aria-selected', i === selected ? 'true' : 'false');
-            btn.innerHTML = '<span>' + cmd.label + '</span><span class="cmd-idx">' + cmd.idx + '</span>';
+
+            // 用 DOM 构建条目，命令名走 textContent，不拼 HTML 字符串
+            const label = document.createElement('span');
+            label.textContent = cmd.label;
+            const idx = document.createElement('span');
+            idx.className = 'cmd-idx';
+            idx.textContent = cmd.idx;
+            btn.appendChild(label);
+            btn.appendChild(idx);
             btn.addEventListener('click', function () {
                 runCommand(cmd);
             });

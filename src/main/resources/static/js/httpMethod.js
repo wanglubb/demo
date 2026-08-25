@@ -1,6 +1,39 @@
 // 新增：缓存后端返回的示例参数（如果有）
                 const methodExamples = {};
 
+                // 以纯文本方式渲染响应内容，避免接口返回的 HTML 被当作标签解析
+                function renderResponse(target, text, level) {
+                    if (!target) return;
+                    target.textContent = '';
+                    const span = document.createElement('span');
+                    if (level) span.className = level;
+                    span.textContent = text;
+                    target.appendChild(span);
+                }
+
+                // 后端方法列表拿不到时的兜底选项
+                function applyFallbackMethods(select) {
+                    select.textContent = '';
+                    [
+                        { value: 'createOrder', label: '创建订单 (createOrder)' },
+                        { value: 'custom', label: '自定义方法' }
+                    ].forEach(item => {
+                        const opt = document.createElement('option');
+                        opt.value = item.value;
+                        opt.textContent = item.label;
+                        select.appendChild(opt);
+                    });
+
+                    methodExamples['createOrder'] = {
+                        "method": "createOrder",
+                        "params": {
+                            "orderId": `ORDER_${Date.now()}`,
+                            "amount": 100.00,
+                            "productName": "测试商品"
+                        }
+                    };
+                }
+
                 // 获取方法列表并填充下拉框
                 async function fetchMethods() {
                     const select = document.getElementById('method-select');
@@ -20,22 +53,10 @@
                         }
 
                         // 清空并填充
-                        select.innerHTML = '';
+                        select.textContent = '';
                         if (list.length === 0) {
                             // 后端未返回或为空，回退到默认选项
-                            select.innerHTML = `
-                        <option value="createOrder">创建订单 (createOrder)</option>
-                        <option value="custom">自定义方法</option>
-                    `;
-                            // 保持默认示例
-                            methodExamples['createOrder'] = {
-                                "method": "createOrder",
-                                "params": {
-                                    "orderId": `ORDER_${Date.now()}`,
-                                    "amount": 100.00,
-                                    "productName": "测试商品"
-                                }
-                            };
+                            applyFallbackMethods(select);
                             return;
                         }
 
@@ -72,25 +93,15 @@
                         updateMethodParams();
                     } catch (err) {
                         // 失败时回退到默认选项
-                        select.innerHTML = `
-                    <option value="createOrder">创建订单 (createOrder)</option>
-                    <option value="custom">自定义方法</option>
-                `;
-                        methodExamples['createOrder'] = {
-                            "method": "createOrder",
-                            "params": {
-                                "orderId": `ORDER_${Date.now()}`,
-                                "amount": 100.00,
-                                "productName": "测试商品"
-                            }
-                        };
+                        applyFallbackMethods(select);
                         console.error('获取方法列表失败:', err);
                     }
                 }
 
                 // 复制到剪贴板功能
                 async function copyToClipboard(contentId) {
-                    const contentElement = document.getElementById(contentId);
+                    const contentElement = contentId ? document.getElementById(contentId) : null;
+                    if (!contentElement) return;
                     const textToCopy = contentElement.textContent || contentElement.innerText;
 
                     try {
@@ -117,9 +128,10 @@
                 async function getVersion() {
                     const responseDiv = document.getElementById('version-response');
                     const contentDiv = document.getElementById('version-content');
+                    if (!responseDiv || !contentDiv) return;
 
                     responseDiv.style.display = 'block';
-                    contentDiv.innerHTML = '<span class="loading">正在获取版本信息...</span>';
+                    renderResponse(contentDiv, '正在获取版本信息...', 'loading');
 
                     try {
                         const response = await fetch('/router/getVersion', {
@@ -130,9 +142,9 @@
                         });
 
                         const data = await response.json();
-                        contentDiv.innerHTML = `<span class="success">${JSON.stringify(data, null, 2)}</span>`;
+                        renderResponse(contentDiv, JSON.stringify(data, null, 2), 'success');
                     } catch (error) {
-                        contentDiv.innerHTML = `<span class="error">请求失败: ${error.message}</span>`;
+                        renderResponse(contentDiv, `请求失败: ${error.message}`, 'error');
                     }
                 }
 
@@ -162,7 +174,7 @@
                     }
 
                     responseDiv.style.display = 'block';
-                    contentDiv.innerHTML = '<span class="loading">正在调用接口...</span>';
+                    renderResponse(contentDiv, '正在调用接口...', 'loading');
 
                     try {
                         const response = await fetch('/router/open', {
@@ -175,9 +187,9 @@
 
                         const data = await response.json();
                         const statusClass = data.code === 200 ? 'success' : 'error';
-                        contentDiv.innerHTML = `<span class="${statusClass}">${JSON.stringify(data, null, 2)}</span>`;
+                        renderResponse(contentDiv, JSON.stringify(data, null, 2), statusClass);
                     } catch (error) {
-                        contentDiv.innerHTML = `<span class="error">请求失败: ${error.message}</span>`;
+                        renderResponse(contentDiv, `请求失败: ${error.message}`, 'error');
                     }
                 }
 
@@ -265,8 +277,8 @@
 
                 // 清空响应结果
                 function clearResponse(responseId) {
-                    const responseDiv = document.getElementById(responseId);
-                    responseDiv.style.display = 'none';
+                    const responseDiv = responseId ? document.getElementById(responseId) : null;
+                    if (responseDiv) responseDiv.style.display = 'none';
                 }
 
                 // 登出功能
@@ -294,18 +306,6 @@
                     }
                 }
 
-
-                // 关闭企业状态查询模态框
-                function closeTaxQueryModal() {
-                    const modal = document.getElementById('tax-query-modal');
-                    modal.style.display = 'none';
-                }
-
-                // 关闭结果模态框
-                function closeTaxResultModal() {
-                    const modal = document.getElementById('tax-result-modal');
-                    modal.style.display = 'none';
-                }
 
                 // 执行税务检查
                 async function performTaxCheck() {
@@ -349,7 +349,7 @@
                 // 显示查询结果
                 function displayTaxResult(data) {
                     // 隐藏查询输入模态框
-                    closeTaxQueryModal();
+                    Modal.close('tax-query-modal');
                     
                     // 解析响应数据，提取Result中的指定字段
                     let nsrmc = '';
@@ -384,8 +384,7 @@
                     document.getElementById('swjgmc-value').textContent = swjgmc;
                     
                     // 显示结果模态框
-                    const modal = document.getElementById('tax-result-modal');
-                    modal.style.display = 'flex';
+                    Modal.open('tax-result-modal');
                 }
 
                 // 检查登录状态（登录后调用 fetchMethods）
@@ -399,8 +398,8 @@
                             const userInfo = document.getElementById('user-info');
                             const logoutBtn = document.getElementById('logout-btn');
 
-                            userInfo.textContent = `欢迎，${data.data.username}`;
-                            logoutBtn.style.display = 'inline-block';
+                            if (userInfo) userInfo.textContent = `欢迎，${data.data.username}`;
+                            if (logoutBtn) logoutBtn.style.display = 'inline-block';
 
                             // 登录后获取方法列表
                             fetchMethods();
@@ -414,19 +413,45 @@
                     }
                 }
 
+                // 面板按钮统一走 data-action 委托，避免在 HTML 里写内联 onclick
+                document.addEventListener('click', function (e) {
+                    const trigger = e.target.closest ? e.target.closest('[data-action]') : null;
+                    if (!trigger) return;
+
+                    switch (trigger.dataset.action) {
+                        case 'call-open-api':
+                            callOpenApi();
+                            break;
+                        case 'clear-response':
+                            clearResponse(trigger.dataset.target);
+                            break;
+                        case 'copy':
+                            copyToClipboard(trigger.dataset.target);
+                            break;
+                        case 'logout':
+                            logout();
+                            break;
+                        default:
+                            break;
+                    }
+                });
+
                 // 初始化事件监听器
                 document.addEventListener('DOMContentLoaded', function () {
                     console.log('API测试工具已加载完成');
-                    
-                    // 企业状态查询模态框相关事件
-                    document.getElementById('close-tax-modal').addEventListener('click', closeTaxQueryModal);
-                    document.getElementById('cancel-tax-query').addEventListener('click', closeTaxQueryModal);
-                    document.getElementById('submit-tax-query').addEventListener('click', performTaxCheck);
-                    
-                    // 结果模态框相关事件
-                    document.getElementById('close-result-modal').addEventListener('click', closeTaxResultModal);
-                    document.getElementById('close-result-and-back').addEventListener('click', closeTaxResultModal);
-                    
+
+                    // 方法下拉框切换时同步填充示例参数
+                    const methodSelect = document.getElementById('method-select');
+                    if (methodSelect) {
+                        methodSelect.addEventListener('change', updateMethodParams);
+                    }
+
+                    // 企业状态查询提交（关闭动作由 data-modal-close 统一处理）
+                    const submitTaxQuery = document.getElementById('submit-tax-query');
+                    if (submitTaxQuery) {
+                        submitTaxQuery.addEventListener('click', performTaxCheck);
+                    }
+
                     checkLoginStatus(); // 检查登录状态并在成功后加载方法列表
                     startHeartbeat();   // 开始心跳检测
                 });

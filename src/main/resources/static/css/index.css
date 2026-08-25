@@ -542,6 +542,22 @@ textarea.form-control {
     font-weight: 500;
 }
 
+.result-message {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+.result-message--success {
+    color: var(--color-success, #28a745);
+}
+
+.result-message--error {
+    color: var(--color-danger, #dc3545);
+}
+
 @media (max-width: 768px) {
     .features-grid {
         grid-template-columns: 1fr;
