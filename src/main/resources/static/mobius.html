@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="ink">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Möbius · 单面曲面图版</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/mobius.css">
+</head>
+
+<body>
+    <div class="plate">
+        <div class="plate__frame" aria-hidden="true">
+            <span class="tick tick--tl"></span>
+            <span class="tick tick--tr"></span>
+            <span class="tick tick--bl"></span>
+            <span class="tick tick--br"></span>
+        </div>
+
+        <header class="plate__head">
+            <p class="micro">PLATE 01 &nbsp;/&nbsp; ORIENTABILITY &nbsp;/&nbsp; WIREFRAME</p>
+            <button type="button" id="invert-btn" class="invert" aria-pressed="false">
+                <span class="invert__swatch"></span>反相
+            </button>
+        </header>
+
+        <section class="stage">
+            <div class="stage__label stage__label--left" aria-hidden="true">ONE EDGE</div>
+            <div class="stage__label stage__label--right" aria-hidden="true">ONE SURFACE</div>
+            <canvas id="mobius-canvas" role="img"
+                aria-label="旋转的莫比乌斯环线框图，由边界线、中线与横向母线构成"></canvas>
+            <p class="stage__hint">拖拽可转动 · 横向改变自转 · 纵向改变俯角</p>
+        </section>
+
+        <div class="titleblock">
+            <div class="titleblock__cell titleblock__cell--wide">
+                <h1>Möbius<span class="titleblock__i">·</span><em>strip</em></h1>
+                <p class="lede">一条边、一个面。沿带面行走两圈才回到起点——高亮弧正在走这段路。</p>
+            </div>
+
+            <dl class="titleblock__cell specs">
+                <div>
+                    <dt>参数式</dt>
+                    <dd class="mono">x=(R+v·cos u⁄2)cos u<br>y=(R+v·cos u⁄2)sin u<br>z=v·sin u⁄2</dd>
+                </div>
+                <div>
+                    <dt>取值</dt>
+                    <dd class="mono">u ∈ [0, 4π) &nbsp; v ∈ [−0.36, 0.36] &nbsp; R = 1</dd>
+                </div>
+            </dl>
+
+            <ul class="titleblock__cell legend">
+                <li><span class="key key--edge"></span>边界曲线 <b>×1</b></li>
+                <li><span class="key key--mid"></span>纵向中线 <b>×3</b></li>
+                <li><span class="key key--rule"></span>横向母线 <b>×56</b></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="grain" aria-hidden="true"></div>
+    <script src="js/mobius.js"></script>
+</body>
+
+</html>

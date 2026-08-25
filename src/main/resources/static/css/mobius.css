@@ -1,0 +1,350 @@
+/* Möbius 图版 · 单色（黑/白/灰）雕版风格，线条优先，无彩色 */
+
+:root[data-theme="ink"] {
+    --paper: #0b0b0c;
+    --paper-2: #121214;
+    --ink: #ecece9;
+    --ink-soft: rgb(236 236 233 / 0.62);
+    --ink-faint: rgb(236 236 233 / 0.34);
+    --rule: rgb(236 236 233 / 0.16);
+    --rule-soft: rgb(236 236 233 / 0.08);
+    --mobius-line: 236 236 233;
+    --mobius-gain: 1;
+    --grain-opacity: 0.05;
+    --vignette: rgb(0 0 0 / 0.55);
+}
+
+:root[data-theme="paper"] {
+    --paper: #f2f1ed;
+    --paper-2: #e9e8e3;
+    --ink: #131313;
+    --ink-soft: rgb(19 19 19 / 0.66);
+    --ink-faint: rgb(19 19 19 / 0.4);
+    --rule: rgb(19 19 19 / 0.2);
+    --rule-soft: rgb(19 19 19 / 0.1);
+    --mobius-line: 19 19 19;
+    --mobius-gain: 1.55;
+    --grain-opacity: 0.07;
+    --vignette: rgb(0 0 0 / 0.14);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    background:
+        radial-gradient(120% 90% at 50% 42%, transparent 38%, var(--vignette) 100%),
+        radial-gradient(80% 60% at 50% 30%, var(--paper-2) 0%, var(--paper) 62%);
+    color: var(--ink);
+    font-family: "IBM Plex Mono", ui-monospace, "Courier New", monospace;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---------- 图版骨架 ---------- */
+.plate {
+    position: relative;
+    height: 100%;
+    padding: clamp(20px, 3.2vw, 46px);
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: clamp(14px, 2vw, 26px);
+    animation: plate-in 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.plate__frame {
+    position: absolute;
+    inset: clamp(12px, 1.8vw, 26px);
+    border: 1px solid var(--rule);
+    pointer-events: none;
+}
+
+/* 四角准星：技术图纸的定位十字 */
+.tick {
+    position: absolute;
+    width: 13px;
+    height: 13px;
+}
+
+.tick::before,
+.tick::after {
+    content: "";
+    position: absolute;
+    background: var(--ink-faint);
+}
+
+.tick::before {
+    inset: 50% 0 auto 0;
+    height: 1px;
+}
+
+.tick::after {
+    inset: 0 50% 0 auto;
+    width: 1px;
+}
+
+.tick--tl { top: -7px; left: -7px; }
+.tick--tr { top: -7px; right: -7px; }
+.tick--bl { bottom: -7px; left: -7px; }
+.tick--br { bottom: -7px; right: -7px; }
+
+/* ---------- 顶栏 ---------- */
+.plate__head {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.micro {
+    margin: 0;
+    font-size: 10px;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+}
+
+.invert {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 14px;
+    font: inherit;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 200ms, border-color 200ms;
+}
+
+.invert:hover {
+    color: var(--ink);
+    border-color: var(--ink-faint);
+}
+
+.invert__swatch {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    background: linear-gradient(90deg, currentColor 0 50%, transparent 50% 100%);
+}
+
+/* ---------- 画布舞台 ---------- */
+.stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* 画布始终保持正方形，并在高度受限时优先缩放而不是撑破图版 */
+#mobius-canvas {
+    display: block;
+    flex: 1 1 auto;
+    min-height: 0;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+    cursor: grab;
+    touch-action: none;
+    animation: rise 1200ms cubic-bezier(0.16, 1, 0.3, 1) 160ms both;
+}
+
+#mobius-canvas.is-grabbing {
+    cursor: grabbing;
+}
+
+/* 两侧竖排注记，呼应「一条边 / 一个面」 */
+.stage__label {
+    position: absolute;
+    top: 50%;
+    font-size: 10px;
+    letter-spacing: 0.42em;
+    color: var(--ink-faint);
+    white-space: nowrap;
+}
+
+.stage__label--left {
+    left: 4px;
+    transform: translateY(-50%) rotate(180deg);
+    writing-mode: vertical-rl;
+}
+
+.stage__label--right {
+    right: 4px;
+    transform: translateY(-50%);
+    writing-mode: vertical-rl;
+}
+
+.stage__hint {
+    flex: 0 0 auto;
+    margin: 0;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    color: var(--ink-faint);
+}
+
+/* ---------- 图签栏 ---------- */
+.titleblock {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(240px, 1.25fr) minmax(220px, 1fr) auto;
+    border-top: 1px solid var(--rule);
+}
+
+.titleblock__cell {
+    padding: 18px 22px 4px;
+    border-left: 1px solid var(--rule-soft);
+}
+
+.titleblock__cell:first-child {
+    padding-left: 0;
+    border-left: 0;
+}
+
+.titleblock h1 {
+    margin: 0;
+    font-family: "Instrument Serif", Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(2.4rem, 5.4vw, 4.4rem);
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+}
+
+.titleblock h1 em {
+    font-style: italic;
+    color: var(--ink-soft);
+}
+
+.titleblock__i {
+    display: inline-block;
+    margin: 0 0.28em;
+    color: var(--ink-faint);
+    font-size: 0.4em;
+    vertical-align: 0.35em;
+}
+
+.lede {
+    max-width: 42ch;
+    margin: 12px 0 0;
+    font-size: 12px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+}
+
+.specs {
+    margin: 0;
+    display: grid;
+    gap: 12px;
+    align-content: start;
+}
+
+.specs dt {
+    font-size: 9.5px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+}
+
+.specs dd {
+    margin: 5px 0 0;
+    font-size: 11.5px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+}
+
+.legend {
+    list-style: none;
+    margin: 0;
+    display: grid;
+    gap: 11px;
+    align-content: start;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    white-space: nowrap;
+}
+
+.legend b {
+    font-weight: 500;
+    color: var(--ink);
+}
+
+/* 图例色块同样只用线条表达粗细层级 */
+.key {
+    display: inline-block;
+    width: 30px;
+    margin-right: 10px;
+    vertical-align: 3px;
+    border-top-style: solid;
+    border-top-color: var(--ink);
+}
+
+.key--edge { border-top-width: 2px; }
+.key--mid { border-top-width: 1px; opacity: 0.6; }
+.key--rule { border-top-width: 1px; opacity: 0.32; }
+
+/* ---------- 颗粒质感 ---------- */
+.grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes plate-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes rise {
+    from { opacity: 0; transform: translateY(18px) scale(0.985); }
+    to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 860px) {
+    .titleblock {
+        grid-template-columns: 1fr;
+    }
+
+    .titleblock__cell {
+        padding: 16px 0 4px;
+        border-left: 0;
+        border-top: 1px solid var(--rule-soft);
+    }
+
+    .titleblock__cell:first-child {
+        border-top: 0;
+    }
+
+    .stage__label {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .plate,
+    #mobius-canvas {
+        animation: none;
+    }
+}
